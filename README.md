@@ -4,6 +4,9 @@
 
 - Python 2.7
 - Spark >= 2.0.1
+- numpy
+- matplotlib
+- h5py
 - dpath
 - ccplot (the `ccplot.hdfeos` module)
 
