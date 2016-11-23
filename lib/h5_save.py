@@ -13,4 +13,5 @@ def h5_save(filename):
                     maxshape = list(v.shape)
                     maxshape[0] = None
                     dataset = f.create_dataset(k, data=v, maxshape=maxshape)
+        return data
     return f
