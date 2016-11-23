@@ -9,11 +9,12 @@ from pyspark import SparkContext
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 from lib import hdfeos_subset
-from lib.areas import is_ross_sea, is_ross_ice_shelf
+from lib.areas import is_ross_sea, is_ross_ice_shelf, is_any_area
 
 AREAS = {
     'ross_sea': is_ross_sea,
-    'ross_ice_shelf': is_ross_ice_shelf
+    'ross_ice_shelf': is_ross_ice_shelf,
+    'any': is_any_area
 }
 
 if __name__ == '__main__':
