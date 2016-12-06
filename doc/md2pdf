@@ -1,0 +1,7 @@
+#!/bin/sh -e
+pandoc \
+	-V mainfont="Lato" \
+	-V fontsize="12pt" \
+	-V geometry="top=3cm,bottom=3cm,left=2cm,right=2cm" \
+	-V papersize="a4paper" \
+	--latex-engine xelatex -o "${1%.md}.pdf" "$1"

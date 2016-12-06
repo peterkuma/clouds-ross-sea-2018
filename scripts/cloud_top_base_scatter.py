@@ -8,6 +8,7 @@ import argparse
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import gridspec
+import h5py
 from pyspark import SparkContext
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
@@ -41,10 +42,11 @@ if __name__ == '__main__':
     sc = SparkContext(appName='Profile')
 
     parser = argparse.ArgumentParser(description='Cloud top/base scatter plot')
-    parser.add_argument('files', metavar='FILES', type=str,
-                       help='HDF5 input files', nargs='*')
-    parser.add_argument('-o', dest='output', type=str,
-                       help='output plot')
+    parser.add_argument('files', metavar='FILES', type=str, help='HDF5 input files', nargs='*')
+    parser.add_argument('-o', dest='output', type=str, help='output plot')
+    parser.add_argument('-d', dest='data_output', type=str, help='data output')
+    parser.add_argument('-t', dest='title', type=str, help='plot title', default='')
+
 
     args = parser.parse_args()
 
@@ -69,29 +71,43 @@ if __name__ == '__main__':
             },
             'lon': {
                 'dataset': 'lon'
-            },
-            'flag_top': {
-                'dataset': 'flag_top'
             }
         })) \
         .filter(not_empty('lon')) \
         .map(filter_cloudsat_quality('data_quality')) \
-        .map(cloud_top_base()) \
-        .map(select('datasets/cloud_top_base')) \
+        .map(cloud_top_base())
 
-    point_groups = rdd.collect()
+    point_groups = rdd \
+        .map(select('datasets/cloud_top_base')) \
+        .collect()
     points = np.concatenate(point_groups, axis=0)
     npoints = points.shape[0]
-    indexes = np.random.choice(npoints, 100000, replace=False)
+    indexes = np.random.choice(npoints, 200000, replace=False)
     points_sample = points[indexes]
+
+    if args.data_output:
+        with h5py.File(args.data_output, 'w') as f:
+            f.create_dataset('points', data=points_sample)
 
     #plt.figure(figsize=(10, 10))
 
-    plt.scatter(points_sample[:, 0], points_sample[:, 1],
+    plt.rcParams['font.family'] = 'Open Sans'
+
+    plt.scatter(
+        (points_sample[:, 0] + np.random.normal(0, 10, points_sample.shape[0]))/1000.0,
+        (points_sample[:, 1] + np.random.normal(0, 10, points_sample.shape[0]))/1000.0,
         s=1,
         marker='.',
-        edgecolors='none'
+        edgecolors='none',
+        color='#1124c0',
+        alpha=0.25
     )
+
+    plt.title(args.title)
+    plt.xlim(-1, 21)
+    plt.ylim(-1, 21)
+    plt.xlabel('Cloud Base (km)')
+    plt.ylabel('Cloud Top (km)')
 
     if args.output:
         plt.savefig(args.output, dpi=600)

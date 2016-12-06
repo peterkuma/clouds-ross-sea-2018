@@ -4,9 +4,11 @@ import tempfile
 import dpath
 import numpy as np
 import h5py
+import xarray as xr
 from ccplot.hdfeos import HDFEOS
 
 from .misc import mask_datasets, subset_datasets
+from ..daynight import daynight
 
 
 def noop():
@@ -24,17 +26,28 @@ def unzip():
     return f
 
 
-def hdfeos(dataset_names):
+def hdfeos(dataset_names, xarray=False):
     def f(data):
         with tempfile.NamedTemporaryFile(suffix='.hdf') as f:
             f.write(data['file_data'])
             f.flush()
             f.tell()
             with HDFEOS(f.name) as product:
-                data['datasets'] = {
-                    k: product[v['swath']][v['dataset']][::]
-                    for k, v, in dataset_names.iteritems()
-                }
+                if xarray:
+                    data['datasets'] = xr.Dataset({
+                        k: {
+                            (
+                                v['coords'],
+                                product[v['swath']][v['dataset']][::]
+                            )
+                        }
+                        for k, v, in dataset_names.iteritems()
+                    })
+                else:
+                    data['datasets'] = {
+                        k: product[v['swath']][v['dataset']][::]
+                        for k, v, in dataset_names.iteritems()
+                    }
                 del data['file_data']
                 return data
     return f
@@ -110,4 +123,42 @@ def split(n):
 def size(dataset_name):
     def f(data):
         return data['datasets'][dataset_name].size
+    return f
+
+
+def cloudsat_time():
+    def f(data):
+        data['datasets']['time'] = (
+            data['datasets']['tai_start'] +
+            data['datasets']['profile_time']
+        )
+        del data['datasets']['tai_start']
+        del data['datasets']['profile_time']
+        return data
+    return f
+
+
+def cloudsat_daynight():
+    def f(data):
+        data['datasets']['daynight'] = daynight(
+            data['datasets']['lon'],
+            data['datasets']['lat'],
+            data['datasets']['time']
+        )
+        return data
+    return f
+
+
+def filter_daynight(daynight):
+    def f(data):
+        mask = data['datasets']['daynight'] == daynight
+        data['datasets'] = mask_datasets(data['datasets'], mask)
+        return data
+    return f
+
+
+def include(names):
+    def f(data):
+        data['datasets'] = { k: data['datasets'][k] for k in names }
+        return data
     return f
