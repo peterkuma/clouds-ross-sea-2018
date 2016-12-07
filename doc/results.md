@@ -29,8 +29,8 @@ author: Peter Kuma
 
 ## Cloud incidence by type
 
-\includegraphics[width=0.48\textwidth]{../out/cloud_incidence_by_type_rs_cldclass.png}
-\includegraphics[width=0.48\textwidth]{../out/cloud_incidence_by_type_ris_cldclass.png}
+\includegraphics[width=0.48\textwidth]{../out/cloud_incidence_by_type_rs_cldclass.pdf}
+\includegraphics[width=0.48\textwidth]{../out/cloud_incidence_by_type_ris_cldclass.pdf}
 
 ## Correction factor
 

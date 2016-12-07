@@ -1,4 +1,4 @@
-# Analysis of clouds over the Ross Sea and Ross Ice Shelf
+# Analysis of clouds over Ross Sea and the Ross Ice Shelf
 
 ## Requirements
 
@@ -12,11 +12,20 @@
 
 ## Data
 
-- CloudSat 2B-GEOPROF-LIDAR P2_R04 products
+- CloudSat 2B-GEOPROF-LIDAR P2_R04 products (2006-2011)
+- CloudSat 2B-CLDCLASS-LIDAR P_R04 products (2007-2010)
+
+## Contents
+
+- `doc` - Documents
+- `lib` - Python libraries
+- `out` - Output files
+- `scripts` - Spark and plotting python scripts
 
 ## Spark scripts
 
-Use `spark-submit scripts/<script>.py --help` for more information.
+Use `spark-submit scripts/<script>.py --help` for more information about how
+to submit the scripts.
 
 ### ross_area_files.py
 
@@ -112,8 +121,8 @@ Plot cloud incidence by type histogram.
 
 Example:
 
-    python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_rs_cldclass.png out/cloud_incidence_rs_cldclass.h5
-    python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_ris_cldclass.png out/cloud_incidence_ris_cldclass.h5
+    python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_rs_cldclass.pdf out/cloud_incidence_rs_cldclass.h5
+    python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_ris_cldclass.pdf out/cloud_incidence_ris_cldclass.h5
 
 ### cloud_incidence_map_8000_8300
 

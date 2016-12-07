@@ -17,29 +17,34 @@ from lib.spark.filter import not_empty
 heights = np.arange(0, 15000)
 
 
-def cloud_incidence1(heights, top, base):
+def cloud_incidence1(heights, top, base, type=None, phase=None):
     w = top.size
     h = heights.size
+    t = 9
+    p = 3
     top_idx = np.searchsorted(heights, top)
     base_idx = np.searchsorted(heights, base)
-    hist = np.zeros(h, np.int64)
-    for i in range(w):
-        hist[base_idx[i]:top_idx[i]] += 1
-    # for i in range(h):
-    #     hist[i] = np.sum((base_idx <= i) & (top_idx > i))
-    return hist
 
+    if (
+        type is not None and
+        phase is not None
+    ):
+        hist = np.zeros((h, t, p), np.int64)
+        for i in range(w):
+            hist[base_idx[i]:top_idx[i], type[i], phase[i] - 1] += 1
+    elif type is not None:
+        hist = np.zeros((h, t), np.int64)
+        for i in range(w):
+            hist[base_idx[i]:top_idx[i], type[i]] += 1
+    elif phase is not None:
+        hist = np.zeros((h, p), np.int64)
+        for i in range(w):
+            hist[base_idx[i]:top_idx[i], phase[i] - 1] += 1
+    else:
+        hist = np.zeros(h, np.int64)
+        for i in range(w):
+            hist[base_idx[i]:top_idx[i]] += 1
 
-def cloud_incidence_by_type_phase(heights, top, base, type, phase):
-    w = top.size
-    h = heights.size
-    t = type.size
-    p = phase.size
-    top_idx = np.searchsorted(heights, top)
-    base_idx = np.searchsorted(heights, base)
-    hist = np.zeros((h, t, p), np.int64)
-    for i in range(w):
-        hist[base_idx[i]:top_idx[i], type[i], phase[i]] += 1
     return hist
 
 
@@ -47,16 +52,13 @@ def cloud_incidence():
     def f(data):
         w = data['datasets']['lon'].size
         h = heights.size
+        t = 9
+        p = 3
 
         data['datasets']['cloud_incidence'] = np.zeros(h, np.int64)
-
-        if 'cloud_type' in data['datasets']:
-            t = 9
-            data['datasets']['cloud_incidence_by_type'] = np.zeros((h, t), np.int64)
-
-        if 'cloud_phase' in data['datasets']:
-            p = 3
-            data['datasets']['cloud_incidence_by_phase'] = np.zeros((h, t), np.int64)
+        data['datasets']['cloud_incidence_by_type'] = np.zeros((h, t), np.int64)
+        data['datasets']['cloud_incidence_by_phase'] = np.zeros((h, p), np.int64)
+        data['datasets']['cloud_incidence_by_type_phase'] = np.zeros((h, t, p), np.int64)
 
         heightsx = np.tile(heights, (w, 1))
         max_layers = data['datasets']['layer_top'].shape[1]
@@ -74,22 +76,14 @@ def cloud_incidence():
             if 'cloud_type' in data['datasets']:
                 type = data['datasets']['cloud_type'][:, i]
                 typex = type[mask]
-                for j in range(t):
-                    maskt = typex == j
-                    topxt = topx[maskt]
-                    basext = basex[maskt]
-                    data['datasets']['cloud_incidence_by_type'][:, j] += \
-                        cloud_incidence1(heights, topxt, basext)
+                data['datasets']['cloud_incidence_by_type'] += \
+                    cloud_incidence1(heights, topx, basex, type=typex)
 
             if 'cloud_phase' in data['datasets']:
                 phase = data['datasets']['cloud_phase'][:, i]
                 phasex = phase[mask]
-                for j in range(p):
-                    maskp = phasex == j
-                    topxp = topx[maskp]
-                    basexp = basex[maskp]
-                    data['datasets']['cloud_incidence_by_phase'][:, j] += \
-                        cloud_incidence1(heights, topxp, basexp)
+                data['datasets']['cloud_incidence_by_phase'] += \
+                    cloud_incidence1(heights, topx, basex, phase=phasex)
 
             if (
                 'cloud_type' in data['datasets'] and
@@ -97,8 +91,11 @@ def cloud_incidence():
             ):
                 type = data['datasets']['cloud_type'][:, i]
                 phase = data['datasets']['cloud_phase'][:, i]
+                typex = type[mask]
+                phasex = phase[mask]
                 data['datasets']['cloud_incidence_by_type_phase'] += \
-                    cloud_incidence_by_type_phase(heights, topx, basex, type, phase)
+                    cloud_incidence1(heights, topx, basex,
+                        type=typex, phase=phasex)
         return data
     return f
 
@@ -132,6 +129,9 @@ if __name__ == '__main__':
             'cloud_type': {
                 'dataset': 'cloud_type'
             },
+            'cloud_phase': {
+                'dataset': 'cloud_phase'
+            },
             'lat': {
                 'dataset': 'lat'
             },
@@ -144,8 +144,8 @@ if __name__ == '__main__':
         })) \
         .filter(not_empty('lon')) \
         .map(filter_cloudsat_quality('data_quality')) \
-        .flatMap(split(10000)) \
-        .sample(False, 0.01, 1)
+        .flatMap(split(10000))
+        # .sample(False, 0.01, 1)
 
     if args.daynight is not None:
         rdd = rdd \
@@ -163,6 +163,14 @@ if __name__ == '__main__':
         .map(select('datasets/cloud_incidence_by_type')) \
         .reduce(np.add)
 
+    cloud_incidence_by_phase = rdd \
+        .map(select('datasets/cloud_incidence_by_phase')) \
+        .reduce(np.add)
+
+    cloud_incidence_by_type_phase = rdd \
+        .map(select('datasets/cloud_incidence_by_type_phase')) \
+        .reduce(np.add)
+
     cloud_incidence_total = rdd \
         .map(select('datasets/lon')) \
         .map(lambda x: x.size) \
@@ -171,6 +179,8 @@ if __name__ == '__main__':
     with h5py.File(args.output, 'w') as f:
         f.create_dataset('cloud_incidence', data=cloud_incidence)
         f.create_dataset('cloud_incidence_by_type', data=cloud_incidence_by_type)
+        f.create_dataset('cloud_incidence_by_phase', data=cloud_incidence_by_type_phase)
+        f.create_dataset('cloud_incidence_by_type_phase', data=cloud_incidence_by_type_phase)
         f.create_dataset('cloud_incidence_total', data=cloud_incidence_total)
 
     sc.stop()
