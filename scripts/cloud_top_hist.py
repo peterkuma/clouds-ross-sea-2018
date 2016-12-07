@@ -61,27 +61,31 @@ if __name__ == '__main__':
 
     data = [{'filename': x} for x in args.files]
 
+    dataset_names = {
+        'data_quality': {
+            'dataset': 'data_quality'
+        },
+        'layer_top': {
+            'dataset': 'layer_top'
+        },
+        'cloud_layers': {
+            'dataset': 'cloud_layers'
+        },
+        'lat': {
+            'dataset': 'lat'
+        },
+        'lon': {
+            'dataset': 'lon'
+        }
+    }
+
+    if args.instrument:
+        dataset_names['flag_top'] = {
+            'dataset': 'flag_top'
+        }
+
     freq = sc.parallelize(data) \
-        .map(h5({
-            'data_quality': {
-                'dataset': 'data_quality'
-            },
-            'layer_top': {
-                'dataset': 'layer_top'
-            },
-            'cloud_layers': {
-                'dataset': 'cloud_layers'
-            },
-            'flag_top': {
-                'dataset': 'flag_top'
-            },
-            'lat': {
-                'dataset': 'lat'
-            },
-            'lon': {
-                'dataset': 'lon'
-            }
-        })) \
+        .map(h5(dataset_names)) \
         .filter(not_empty('lon')) \
         .map(filter_cloudsat_quality('data_quality')) \
         .map(lon_rel(160, 1)) \
@@ -92,6 +96,8 @@ if __name__ == '__main__':
 
     hist = freq[1:, :]/np.sum(freq)*22
 
+    plt.figure(figsize=(10, 10))
+
     plt.imshow(
         hist,
         interpolation='nearest',
@@ -99,13 +105,13 @@ if __name__ == '__main__':
         vmin=0,
         vmax=0.25
     )
-    plt.colorbar()
+    plt.colorbar(shrink=0.55)
 
     if args.title:
         plt.title(args.title)
 
     if args.output:
-        plt.savefig(args.output)
+        plt.savefig(args.output, bbox_inches='tight')
     else:
         plt.show()
 

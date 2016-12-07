@@ -55,12 +55,15 @@ Produce a histogram of the topmost cloud top height.
 
 Example:
 
-    spark-submit scripts/cloud_top_hist.py -o out/cloud_top_hist_rs.pdf out/ross_sea.h5 2>/dev/null
-    spark-submit scripts/cloud_top_hist.py -o out/cloud_top_hist_ris.pdf out/ross_ice_shelf.h5 2>/dev/null
-    spark-submit scripts/cloud_top_hist.py -i 1 -o out/cloud_top_hist_rs_cpr.pdf out/ross_sea.h5 2>/dev/null
-    spark-submit scripts/cloud_top_hist.py -i 2 -o out/cloud_top_hist_rs_caliop.pdf out/ross_sea.h5 2>/dev/null
-    spark-submit scripts/cloud_top_hist.py -i 1 -o out/cloud_top_hist_ris_cpr.pdf out/ross_ice_shelf.h5 2>/dev/null
-    spark-submit scripts/cloud_top_hist.py -i 2 -o out/cloud_top_hist_ris_caliop.pdf out/ross_ice_shelf.h5 2>/dev/null
+    spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, 2006-2011, 2B-GEOPROF-LIDAR)" -o out/cloud_top_hist_rs.pdf out/ross_sea.h5 2>/dev/null
+    spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, 2006-2011, 2B-GEOPROF-LIDAR)" -o out/cloud_top_hist_ris.pdf out/ross_ice_shelf.h5 2>/dev/null
+    spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, 2006-2011, 2B-GEOPROF-LIDAR, CPR)" -i 1 -o out/cloud_top_hist_rs_cpr.pdf out/ross_sea.h5 2>/dev/null
+    spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, 2006-2011, 2B-GEOPROF-LIDAR, CALIOP)" -i 2 -o out/cloud_top_hist_rs_caliop.pdf out/ross_sea.h5 2>/dev/null
+    spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, 2006-2011, 2B-GEOPROF-LIDAR, CPR)" -i 1 -o out/cloud_top_hist_ris_cpr.pdf out/ross_ice_shelf.h5 2>/dev/null
+    spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, 2006-2011, 2B-GEOPROF-LIDAR, CALIOP)" -i 2 -o out/cloud_top_hist_ris_caliop.pdf out/ross_ice_shelf.h5 2>/dev/null
+
+    spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_top_hist_rs_cldclass.pdf out/ross_sea_cldclass.h5 2>/dev/null
+    spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_top_hist_ris_cldclass.pdf out/ross_ice_shelf_cldclass.h5 2>/dev/null
 
 ### profile_sample.py
 

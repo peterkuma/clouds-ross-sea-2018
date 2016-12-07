@@ -13,6 +13,17 @@ author: Peter Kuma
 \includegraphics[width=0.48\textwidth]{../out/cloud_top_base_scatter_rs_cldclass.png}
 \includegraphics[width=0.48\textwidth]{../out/cloud_top_base_scatter_ris_cldclass.png}
 
+## Cloud top histogram
+
+\includegraphics[width=0.48\textwidth]{../out/cloud_top_hist_rs.pdf}
+\includegraphics[width=0.48\textwidth]{../out/cloud_top_hist_ris.pdf}
+\includegraphics[width=0.48\textwidth]{../out/cloud_top_hist_rs_cldclass.pdf}
+\includegraphics[width=0.48\textwidth]{../out/cloud_top_hist_ris_cldclass.pdf}
+\includegraphics[width=0.48\textwidth]{../out/cloud_top_hist_rs_caliop.pdf}
+\includegraphics[width=0.48\textwidth]{../out/cloud_top_hist_ris_caliop.pdf}
+\includegraphics[width=0.48\textwidth]{../out/cloud_top_hist_rs_cpr.pdf}
+\includegraphics[width=0.48\textwidth]{../out/cloud_top_hist_ris_cpr.pdf}
+
 ## Cloud incidence
 
 \includegraphics[width=0.48\textwidth]{../out/cloud_incidence_rs.png}
@@ -23,8 +34,8 @@ author: Peter Kuma
 ## Cloud incidence day/night
 
 \includegraphics[width=0.48\textwidth]{../out/cloud_incidence_rs_day.png}
-\includegraphics[width=0.48\textwidth]{../out/cloud_incidence_rs_night.png}
 \includegraphics[width=0.48\textwidth]{../out/cloud_incidence_ris_day.png}
+\includegraphics[width=0.48\textwidth]{../out/cloud_incidence_rs_night.png}
 \includegraphics[width=0.48\textwidth]{../out/cloud_incidence_ris_night.png}
 
 ## Cloud incidence by type
