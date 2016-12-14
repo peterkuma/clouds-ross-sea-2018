@@ -77,19 +77,11 @@ def plot_main(f):
                 lw=0,
                 hatch=phase_hatches[j]
             )
-            # plt.barh(
-            #     heights/1000.0,
-            #     cloud_incidence_p*100.0,
-            #     height=0.001,
-            #     left=left,
-            #     edgecolor='none',
-            #     color=cloud_colors[i][j]
-            # )
             left += cloud_incidence_p*100.0
 
     plt.xlabel('Frequency (%)')
     plt.ylabel('Height (km)')
-    plt.xlim(0, 35)
+    plt.xlim(0, 45)
     plt.ylim(0, 15)
     plt.xticks(plt.xticks()[0][:-1])
 
@@ -131,7 +123,7 @@ def plot_side(f):
                 linestyle=phase_linestyle[j]
             )
 
-    plt.xlim(0, 15)
+    plt.xlim(0, 25)
     plt.ylim(0, 15)
     plt.xlabel('Frequency (%)')
     plt.gca().yaxis.set_ticklabels([])
@@ -151,16 +143,29 @@ if __name__ == '__main__':
     parser.add_argument('file', type=str, help='HDF5 input file')
     parser.add_argument('-o', dest='outfile', type=str, help='output plot')
     parser.add_argument('-t', dest='title', type=str, help='plot title', default='')
+    # parser.add_argument('-x', dest='variant', type=str, help='plot variant ()', default='simple', choices=['simple', 'double'])
 
     args = parser.parse_args()
 
     with h5py.File(args.file) as f:
         plt.rcParams['font.family'] = 'Open Sans'
         plt.suptitle(args.title, fontsize=14)
+
+        # if args.variant == 'simple':
         gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])
+        # elif args.variant == 'double':
+        #     gs = gridspec.GridSpec(2, 2, width_ratios=[3, 1, 3, 1])
+
         plt.subplot(gs[0])
         plot_main(f)
         plt.subplot(gs[1])
         plot_side(f)
+
+        # if args.variant == 'double':
+        #     plt.subplot(gs[2])
+        #     plot_phase_main()
+        #     plt.subplot(gs[3])
+        #     plot_phase_side(f)
+
         plt.subplots_adjust(wspace=0, left=0, right=1)
         plt.savefig(args.outfile, bbox_inches='tight')

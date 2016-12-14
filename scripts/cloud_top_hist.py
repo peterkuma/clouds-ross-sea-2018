@@ -11,7 +11,7 @@ from pyspark import SparkContext
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-from lib.spark.map import select, lon_rel, h5, filter_cloudsat_quality
+from lib.spark.map import select, lon_rel, h5, filter_cloudsat_quality, filter_coggins_regime
 from lib.spark.filter import not_empty
 
 
@@ -56,6 +56,8 @@ if __name__ == '__main__':
                        help='output plot')
     parser.add_argument('-t', dest='title', type=str,
                        help='plot title')
+    parser.add_argument('-r', dest='regime', type=str,
+                       help='Coggins regime')
 
     args = parser.parse_args()
 
@@ -76,6 +78,9 @@ if __name__ == '__main__':
         },
         'lon': {
             'dataset': 'lon'
+        },
+        'time': {
+            'dataset': 'time'
         }
     }
 
@@ -88,6 +93,7 @@ if __name__ == '__main__':
         .map(h5(dataset_names)) \
         .filter(not_empty('lon')) \
         .map(filter_cloudsat_quality('data_quality')) \
+        .map(filter_coggins_regime(args.regime)) \
         .map(lon_rel(160, 1)) \
         .map(cloud_top(flag_top=args.instrument)) \
         .map(cloud_top_histogram()) \

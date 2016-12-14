@@ -10,7 +10,7 @@ from pyspark import SparkContext
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-from lib.spark.map import h5, select, filter_cloudsat_quality, split, cloudsat_daynight, filter_daynight
+from lib.spark.map import h5, select, filter_cloudsat_quality, split, cloudsat_daynight, filter_daynight, filter_coggins_regime
 from lib.spark.filter import not_empty
 
 
@@ -104,46 +104,52 @@ if __name__ == '__main__':
     sc = SparkContext(appName='CloudIncidence')
 
     parser = argparse.ArgumentParser(description='Cloud incidence histogram')
-    parser.add_argument('files', metavar='FILES', type=str,
-                       help='HDF5 input files', nargs='*')
-    parser.add_argument('-o', dest='output', type=str,
-                       help='output')
-    parser.add_argument('-n', dest='daynight', type=int,
-                       help='day/night only (0 - night, 1 - day)')
+    parser.add_argument('files', metavar='FILES', type=str, help='HDF5 input files', nargs='*')
+    parser.add_argument('-o', dest='output', type=str, help='output')
+    parser.add_argument('-n', dest='daynight', type=int, help='day/night only (0 - night, 1 - day)')
+    parser.add_argument('-p', dest='product_type', type=str, help='product type', default='2b-geoprof-lidar', choices=['2b-geoprof-lidar', '2b-cldclass-lidar'])
+    parser.add_argument('-r', dest='regime', type=str, help='Coggins regime')
 
     args = parser.parse_args()
 
     data = [{'filename': x} for x in args.files]
 
-    rdd = sc.parallelize(data) \
-        .map(h5({
-            'data_quality': {
-                'dataset': 'data_quality'
-            },
-            'layer_top': {
-                'dataset': 'layer_top'
-            },
-            'layer_base': {
-                'dataset': 'layer_base'
-            },
+    dataset_names = {
+        'data_quality': {
+            'dataset': 'data_quality'
+        },
+        'layer_top': {
+            'dataset': 'layer_top'
+        },
+        'layer_base': {
+            'dataset': 'layer_base'
+        },
+        'lat': {
+            'dataset': 'lat'
+        },
+        'lon': {
+            'dataset': 'lon'
+        },
+        'time': {
+            'dataset': 'time'
+        }
+    }
+
+    if args.product_type == '2b-cldclass-lidar':
+        dataset_names.update({
             'cloud_type': {
                 'dataset': 'cloud_type'
             },
             'cloud_phase': {
                 'dataset': 'cloud_phase'
-            },
-            'lat': {
-                'dataset': 'lat'
-            },
-            'lon': {
-                'dataset': 'lon'
-            },
-            'time': {
-                'dataset': 'time'
             }
-        })) \
+        })
+
+    rdd = sc.parallelize(data) \
+        .map(h5(dataset_names)) \
         .filter(not_empty('lon')) \
         .map(filter_cloudsat_quality('data_quality')) \
+        .map(filter_coggins_regime(args.regime)) \
         .flatMap(split(10000))
         # .sample(False, 0.01, 1)
 

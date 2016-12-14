@@ -9,6 +9,7 @@ from ccplot.hdfeos import HDFEOS
 
 from .misc import mask_datasets, subset_datasets
 from ..daynight import daynight
+from ..coggins_regimes import coggins_regimes
 
 
 def noop():
@@ -67,6 +68,14 @@ def h5(dataset_names):
 def filter_area(func):
     def f(data):
         mask = func(data['datasets']['lon'], data['datasets']['lat'])
+        data['datasets'] = mask_datasets(data['datasets'], mask)
+        return data
+    return f
+
+
+def filter_time(func):
+    def f(data):
+        mask = func(data['datasets']['time'])
         data['datasets'] = mask_datasets(data['datasets'], mask)
         return data
     return f
@@ -152,6 +161,17 @@ def cloudsat_daynight():
 def filter_daynight(daynight):
     def f(data):
         mask = data['datasets']['daynight'] == daynight
+        data['datasets'] = mask_datasets(data['datasets'], mask)
+        return data
+    return f
+
+
+def filter_coggins_regime(regime):
+    def f(data):
+        if regime is None:
+            return data
+        regimes = coggins_regimes(data['datasets']['time'])
+        mask = regimes == regime
         data['datasets'] = mask_datasets(data['datasets'], mask)
         return data
     return f

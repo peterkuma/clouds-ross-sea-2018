@@ -6,6 +6,7 @@
 - Spark >= 2.0.1
 - numpy
 - matplotlib
+- pytz
 - h5py
 - dpath
 - ccplot (the `ccplot.hdfeos` module)
@@ -65,6 +66,22 @@ Example:
     spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_top_hist_rs_cldclass.pdf out/ross_sea_cldclass.h5 2>/dev/null
     spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_top_hist_ris_cldclass.pdf out/ross_ice_shelf_cldclass.h5 2>/dev/null
 
+    for regime in wnc snc ras wsc ws; do
+        spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, ${regime^^}, 2006-2011, 2B-GEOPROF-LIDAR)" -o "out/cloud_top_hist_rs_$regime.pdf" -r "$regime" out/ross_sea.h5 2>/dev/null
+    done
+
+    for regime in wnc snc ras wsc ws; do
+        spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, ${regime^^}, 2006-2011, 2B-GEOPROF-LIDAR)" -o "out/cloud_top_hist_ris_$regime.pdf" -r "$regime" out/ross_ice_shelf.h5 2>/dev/null
+    done
+
+    for regime in wnc snc ras wsc ws; do
+        spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, ${regime^^}, 2006-2011, 2B-CLDCLASS-LIDAR)" -o "out/cloud_top_hist_rs_${regime}_cldclass.pdf" -r "$regime" out/ross_sea_cldclass.h5 2>/dev/null
+    done
+
+    for regime in wnc snc ras wsc ws; do
+        spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, ${regime^^}, 2006-2011, 2B-CLDCLASS-LIDAR)" -o "out/cloud_top_hist_ris_${regime}_cldclass.pdf" -r "$regime" out/ross_ice_shelf_cldclass.h5 2>/dev/null
+    done
+
 ### profile_sample.py
 
 Plot a profile sample.
@@ -99,8 +116,17 @@ Example:
     spark-submit scripts/cloud_incidence.py -n 0 out/ross_ice_shelf.h5 -o out/cloud_incidence_ris_night.h5 2>/dev/null
     spark-submit scripts/cloud_incidence.py -n 1 out/ross_ice_shelf.h5 -o out/cloud_incidence_ris_day.h5 2>/dev/null
 
-    spark-submit scripts/cloud_incidence.py out/ross_sea_cldclass.h5 -o out/cloud_incidence_rs_cldclass.h5 2>/dev/null
-    spark-submit scripts/cloud_incidence.py out/ross_ice_shelf_cldclass.h5 -o out/cloud_incidence_ris_cldclass.h5 2>/dev/null
+    spark-submit scripts/cloud_incidence.py -p 2b-cldclass-lidar out/ross_sea_cldclass.h5 -o out/cloud_incidence_rs_cldclass.h5 2>/dev/null
+    spark-submit scripts/cloud_incidence.py -p 2b-cldclass-lidar out/ross_ice_shelf_cldclass.h5 -o out/cloud_incidence_ris_cldclass.h5 2>/dev/null
+
+    for regime in wnc snc ras wsc ws; do
+        spark-submit scripts/cloud_incidence.py -p 2b-cldclass-lidar -r "$regime" out/ross_sea_cldclass.h5 -o "out/cloud_incidence_rs_${regime}_cldclass.h5" 2>/dev/null
+    done
+
+    for regime in wnc snc ras wsc ws; do
+        spark-submit scripts/cloud_incidence.py -p 2b-cldclass-lidar -r "$regime" out/ross_ice_shelf_cldclass.h5 -o "out/cloud_incidence_ris_${regime}_cldclass.h5" 2>/dev/null
+    done
+
 
 ### plot_cloud_incidence.py
 
@@ -118,6 +144,15 @@ Example:
     python scripts/plot_cloud_incidence.py -t "Cloud incidence (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_rs_cldclass.png out/cloud_incidence_rs_cldclass.h5
     python scripts/plot_cloud_incidence.py -t "Cloud incidence (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_ris_cldclass.png out/cloud_incidence_ris_cldclass.h5
 
+    for regime in wnc snc ras wsc ws; do
+        python scripts/plot_cloud_incidence.py -t "Cloud incidence (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_rs_${regime}_cldclass.png out/cloud_incidence_rs_cldclass.h5
+    done
+
+    for regime in wnc snc ras wsc ws; do
+        python scripts/plot_cloud_incidence.py -t "Cloud incidence (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_ris_${regime}_cldclass.png out/cloud_incidence_ris_${regime}_cldclass.h5
+    done
+
+
 ### plot_cloud_incidence_by_type.py
 
 Plot cloud incidence by type histogram.
@@ -127,13 +162,21 @@ Example:
     python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_rs_cldclass.pdf out/cloud_incidence_rs_cldclass.h5
     python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_ris_cldclass.pdf out/cloud_incidence_ris_cldclass.h5
 
+    for regime in wnc snc ras wsc ws; do
+        python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_rs_${regime}_cldclass.pdf out/cloud_incidence_rs_${regime}_cldclass.h5
+    done
+
+    for regime in wnc snc ras wsc ws; do
+        python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_ris_${regime}_cldclass.pdf out/cloud_incidence_ris_${regime}_cldclass.h5
+    done
+
 ### cloud_incidence_map_8000_8300
 
 Calculate cloud incidence map for two heights (8000 m and 8300 m).
 
-    Example:
+Example:
 
-        spark-submit scripts/cloud_incidence_map_8000_8300.py -o out/cloud_incidence_map_8000_8300.h5 '/data/datasets/cloudsat/2b-geoprof-lidar/*/*/*.zip' 2>/dev/null
+    spark-submit scripts/cloud_incidence_map_8000_8300.py -o out/cloud_incidence_map_8000_8300.h5 '/data/datasets/cloudsat/2b-geoprof-lidar/*/*/*.zip' 2>/dev/null
 
 ### plot_correction_factor.py
 
@@ -147,3 +190,19 @@ Example:
     python scripts/plot_correction_factor.py out/cloud_incidence_map_8000_8300_djf.h5 -t 'Cloud incidence correction factor 8000 m vs. 8300 m (DJF)' -o out/correction_factor_djf.pdf
 
     python scripts/plot_correction_factor.py out/cloud_incidence_map_8000_8300_jja.h5 -t 'Cloud incidence correction factor 8000 m vs. 8300 m (JJA)' -o out/correction_factor_jja.pdf
+
+### plot_regimes.py
+
+Plot regimes distribution by month.
+
+Example:
+
+    python scripts/plot_regimes.py -t 'Regimes distribution by month (2007-2010)' -o out/regimes.pdf
+
+## Coggins clusters
+
+- `wnc`: weak northern cyclonic (WNC)
+- `snc`: strong northern cyclonic (SNC)
+- `ras`: Ross Ice Shelf air stream (RAS)
+- `wsc`: weak southern cyclonic (WSC)
+- `ws`: katabatic and weak synoptic (WS)
