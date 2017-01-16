@@ -10,7 +10,7 @@ from pyspark import SparkContext
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-from lib.spark.map import h5, select, filter_cloudsat_quality, split, cloudsat_daynight, filter_daynight, filter_coggins_regime
+from lib.spark.map import h5, select, filter_cloudsat_quality, split, cloudsat_daynight, filter_daynight, filter_coggins_regime, filter_season
 from lib.spark.filter import not_empty
 
 
@@ -109,6 +109,7 @@ if __name__ == '__main__':
     parser.add_argument('-n', dest='daynight', type=int, help='day/night only (0 - night, 1 - day)')
     parser.add_argument('-p', dest='product_type', type=str, help='product type', default='2b-geoprof-lidar', choices=['2b-geoprof-lidar', '2b-cldclass-lidar'])
     parser.add_argument('-r', dest='regime', type=str, help='Coggins regime')
+    parser.add_argument('-s', dest='season', type=str, help='season')
 
     args = parser.parse_args()
 
@@ -150,6 +151,7 @@ if __name__ == '__main__':
         .filter(not_empty('lon')) \
         .map(filter_cloudsat_quality('data_quality')) \
         .map(filter_coggins_regime(args.regime)) \
+        .map(filter_season(args.season)) \
         .flatMap(split(10000))
         # .sample(False, 0.01, 1)
 

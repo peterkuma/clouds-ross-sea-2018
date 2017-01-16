@@ -127,6 +127,13 @@ Example:
         spark-submit scripts/cloud_incidence.py -p 2b-cldclass-lidar -r "$regime" out/ross_ice_shelf_cldclass.h5 -o "out/cloud_incidence_ris_${regime}_cldclass.h5" 2>/dev/null
     done
 
+    for season in djf mam jja son; do
+        spark-submit scripts/cloud_incidence.py -p 2b-cldclass-lidar -s "$season" out/ross_sea_cldclass.h5 -o "out/cloud_incidence_rs_${season}_cldclass.h5" 2>/dev/null
+    done
+
+    for season in djf mam jja son; do
+        spark-submit scripts/cloud_incidence.py -p 2b-cldclass-lidar -s "$season" out/ross_ice_shelf_cldclass.h5 -o "out/cloud_incidence_ris_${season}_cldclass.h5" 2>/dev/null
+    done
 
 ### plot_cloud_incidence.py
 
@@ -159,15 +166,48 @@ Plot cloud incidence by type histogram.
 
 Example:
 
-    python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_rs_cldclass.pdf out/cloud_incidence_rs_cldclass.h5
-    python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_ris_cldclass.pdf out/cloud_incidence_ris_cldclass.h5
+    python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_rs_cldclass.png out/cloud_incidence_rs_cldclass.h5
+    python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_ris_cldclass.png out/cloud_incidence_ris_cldclass.h5
 
     for regime in wnc snc ras wsc ws; do
-        python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_rs_${regime}_cldclass.pdf out/cloud_incidence_rs_${regime}_cldclass.h5
+        python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_rs_${regime}_cldclass.png out/cloud_incidence_rs_${regime}_cldclass.h5
     done
 
     for regime in wnc snc ras wsc ws; do
-        python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_ris_${regime}_cldclass.pdf out/cloud_incidence_ris_${regime}_cldclass.h5
+        python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_ris_${regime}_cldclass.png out/cloud_incidence_ris_${regime}_cldclass.h5
+    done
+
+    for season in djf mam jja son; do
+        python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, ${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_rs_${season}_cldclass.png out/cloud_incidence_rs_${season}_cldclass.h5
+    done
+
+    for season in djf mam jja son; do
+        python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, ${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_type_ris_${season}_cldclass.png out/cloud_incidence_ris_${season}_cldclass.h5
+    done
+
+### plot_cloud_incidence_by_phase.py
+
+Plot cloud incidence by phase histogram.
+
+Example:
+
+    python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_phase_rs_cldclass.png out/cloud_incidence_rs_cldclass.h5
+    python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_phase_ris_cldclass.png out/cloud_incidence_ris_cldclass.h5
+
+    for regime in wnc snc ras wsc ws; do
+        python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_phase_rs_${regime}_cldclass.png out/cloud_incidence_rs_${regime}_cldclass.h5
+    done
+
+    for regime in wnc snc ras wsc ws; do
+        python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_phase_ris_${regime}_cldclass.png out/cloud_incidence_ris_${regime}_cldclass.h5
+    done
+
+    for season in djf mam jja son; do
+        python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Sea, ${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_phase_rs_${season}_cldclass.png out/cloud_incidence_rs_${season}_cldclass.h5
+    done
+
+    for season in djf mam jja son; do
+        python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Ice Shelf, ${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o out/cloud_incidence_by_phase_ris_${season}_cldclass.png out/cloud_incidence_ris_${season}_cldclass.h5
     done
 
 ### cloud_incidence_map_8000_8300
@@ -198,6 +238,47 @@ Plot regimes distribution by month.
 Example:
 
     python scripts/plot_regimes.py -t 'Regimes distribution by month (2007-2010)' -o out/regimes.pdf
+
+### plot_cloud_incidence_summary_by_phase.py
+
+Plot cloud incidence summary by phase.
+
+Example:
+
+    python scripts/plot_cloud_incidence_summary_by_phase.py -t 'Clouds incidence by phase (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)' -l DJF,MAM,JJA,SON -o out/cloud_incidence_summary_by_phase_rs_seasons.png out/cloud_incidence_rs_djf_cldclass.h5 out/cloud_incidence_rs_mam_cldclass.h5 out/cloud_incidence_rs_jja_cldclass.h5 out/cloud_incidence_rs_son_cldclass.h5
+
+    python scripts/plot_cloud_incidence_summary_by_phase.py -t 'Clouds incidence by phase (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)' -l DJF,MAM,JJA,SON -o out/cloud_incidence_summary_by_phase_ris_seasons.png out/cloud_incidence_ris_djf_cldclass.h5 out/cloud_incidence_ris_mam_cldclass.h5 out/cloud_incidence_ris_jja_cldclass.h5 out/cloud_incidence_ris_son_cldclass.h5
+
+    python scripts/plot_cloud_incidence_summary_by_phase.py -t 'Clouds incidence by phase (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)' -l WNC,SNC,RAS,WSC,WS -o out/cloud_incidence_summary_by_phase_rs_regimes.png out/cloud_incidence_rs_wnc_cldclass.h5 out/cloud_incidence_rs_snc_cldclass.h5 out/cloud_incidence_rs_ras_cldclass.h5 out/cloud_incidence_rs_wsc_cldclass.h5 out/cloud_incidence_rs_ws_cldclass.h5
+
+    python scripts/plot_cloud_incidence_summary_by_phase.py -t 'Clouds incidence by phase (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)' -l WNC,SNC,RAS,WSC,WS -o out/cloud_incidence_summary_by_phase_ris_regimes.png out/cloud_incidence_ris_wnc_cldclass.h5 out/cloud_incidence_ris_snc_cldclass.h5 out/cloud_incidence_ris_ras_cldclass.h5 out/cloud_incidence_ris_wsc_cldclass.h5 out/cloud_incidence_ris_ws_cldclass.h5
+
+### plot_cloud_incidence_summary_by_type.py
+
+Plot cloud incidence summary by type.
+
+Example:
+
+    python scripts/plot_cloud_incidence_summary_by_type.py -t 'Clouds incidence by type (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)' -l DJF,MAM,JJA,SON -o out/cloud_incidence_summary_by_type_rs_seasons.png out/cloud_incidence_rs_djf_cldclass.h5 out/cloud_incidence_rs_mam_cldclass.h5 out/cloud_incidence_rs_jja_cldclass.h5 out/cloud_incidence_rs_son_cldclass.h5
+
+    python scripts/plot_cloud_incidence_summary_by_type.py -t 'Clouds incidence by type (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)' -l DJF,MAM,JJA,SON -o out/cloud_incidence_summary_by_type_ris_seasons.png out/cloud_incidence_ris_djf_cldclass.h5 out/cloud_incidence_ris_mam_cldclass.h5 out/cloud_incidence_ris_jja_cldclass.h5 out/cloud_incidence_ris_son_cldclass.h5
+
+    python scripts/plot_cloud_incidence_summary_by_type.py -t 'Clouds incidence by type (Ross Sea, 2007-2010, 2B-CLDCLASS-LIDAR)' -l WNC,SNC,RAS,WSC,WS -o out/cloud_incidence_summary_by_type_rs_regimes.png out/cloud_incidence_rs_wnc_cldclass.h5 out/cloud_incidence_rs_snc_cldclass.h5 out/cloud_incidence_rs_ras_cldclass.h5 out/cloud_incidence_rs_wsc_cldclass.h5 out/cloud_incidence_rs_ws_cldclass.h5
+
+    python scripts/plot_cloud_incidence_summary_by_type.py -t 'Clouds incidence by type (Ross Ice Shelf, 2007-2010, 2B-CLDCLASS-LIDAR)' -l WNC,SNC,RAS,WSC,WS -o out/cloud_incidence_summary_by_type_ris_regimes.png out/cloud_incidence_ris_wnc_cldclass.h5 out/cloud_incidence_ris_snc_cldclass.h5 out/cloud_incidence_ris_ras_cldclass.h5 out/cloud_incidence_ris_wsc_cldclass.h5 out/cloud_incidence_ris_ws_cldclass.h5
+
+## plot_cloud_incidence_information_gain.py
+
+Plot cloud incidence information gain.
+
+Example:
+
+    python scripts/plot_cloud_incidence_information_gain.py -x phase -o out/cloud_incidence_information_gain_rs_phase.png -c data/classes_rs.json
+    python scripts/plot_cloud_incidence_information_gain.py -x type -o out/cloud_incidence_information_gain_rs_type.png -c data/classes_rs.json
+
+    python scripts/plot_cloud_incidence_information_gain.py -x phase -o out/cloud_incidence_information_gain_ris_phase.png -c data/classes_ris.json
+    python scripts/plot_cloud_incidence_information_gain.py -x type -o out/cloud_incidence_information_gain_ris_type.png -c data/classes_ris.json
+
 
 ## Coggins clusters
 

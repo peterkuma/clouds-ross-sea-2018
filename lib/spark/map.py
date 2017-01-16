@@ -10,6 +10,7 @@ from ccplot.hdfeos import HDFEOS
 from .misc import mask_datasets, subset_datasets
 from ..daynight import daynight
 from ..coggins_regimes import coggins_regimes
+from ..time_season import time_season
 
 
 def noop():
@@ -172,6 +173,17 @@ def filter_coggins_regime(regime):
             return data
         regimes = coggins_regimes(data['datasets']['time'])
         mask = regimes == regime
+        data['datasets'] = mask_datasets(data['datasets'], mask)
+        return data
+    return f
+
+
+def filter_season(season):
+    def f(data):
+        if season is None:
+            return data
+        seasons = time_season(data['datasets']['time'])
+        mask = seasons == season
         data['datasets'] = mask_datasets(data['datasets'], mask)
         return data
     return f

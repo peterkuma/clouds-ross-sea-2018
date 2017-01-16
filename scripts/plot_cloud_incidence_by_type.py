@@ -67,16 +67,16 @@ def plot_main(f):
                 facecolor=cloud_colors[i],
                 lw=0,
             )
-            plt.fill_betweenx(
-                heights/1000.0,
-                left,
-                left + cloud_incidence_p*100.0,
-                facecolor='none',
-                edgecolor='#000000',
-                alpha=0.8,
-                lw=0,
-                hatch=phase_hatches[j]
-            )
+            # plt.fill_betweenx(
+            #     heights/1000.0,
+            #     left,
+            #     left + cloud_incidence_p*100.0,
+            #     facecolor='none',
+            #     edgecolor='#000000',
+            #     alpha=0.8,
+            #     lw=0,
+            #     hatch=phase_hatches[j]
+            # )
             left += cloud_incidence_p*100.0
 
     plt.xlabel('Frequency (%)')
@@ -93,11 +93,11 @@ def plot_main(f):
     ])
     legend_type.get_frame().set_linewidth(0.8)
 
-    legend_phase = plt.legend(handles=[
-        mpatches.Patch(hatch=phase_hatches[i], label=cloud_phases[i], facecolor='none', edgecolor='#000000', lw=0.5)
-        for i in range(len(cloud_phases))
-    ], bbox_to_anchor=(0.804, 1))
-    legend_phase.get_frame().set_linewidth(0.8)
+    # legend_phase = plt.legend(handles=[
+    #     mpatches.Patch(hatch=phase_hatches[i], label=cloud_phases[i], facecolor='none', edgecolor='#000000', lw=0.5)
+    #     for i in range(len(cloud_phases))
+    # ], bbox_to_anchor=(0.804, 1))
+    # legend_phase.get_frame().set_linewidth(0.8)
 
     plt.gca().add_artist(legend_type)
 
@@ -113,15 +113,15 @@ def plot_side(f):
             color=cloud_colors[i]
         )
 
-    for i in reversed(range(len(cloud_types))):
-        for j in range(len(cloud_phases)):
-            cloud_incidence_p = 1.0*f['cloud_incidence_by_type_phase'][:, i, j]/total
-            plt.plot(
-                cloud_incidence_p*100.0,
-                heights/1000.0,
-                color=cloud_colors[i],
-                linestyle=phase_linestyle[j]
-            )
+    # for i in reversed(range(len(cloud_types))):
+    #     for j in range(len(cloud_phases)):
+    #         cloud_incidence_p = 1.0*f['cloud_incidence_by_type_phase'][:, i, j]/total
+    #         plt.plot(
+    #             cloud_incidence_p*100.0,
+    #             heights/1000.0,
+    #             color=cloud_colors[i],
+    #             linestyle=phase_linestyle[j]
+    #         )
 
     plt.xlim(0, 25)
     plt.ylim(0, 15)
@@ -129,13 +129,13 @@ def plot_side(f):
     plt.gca().yaxis.set_ticklabels([])
     plt.grid()
 
-    legend = plt.legend(handles=
-        [mlines.Line2D([], [], linestyle='solid', label='total', color='#000000')] + [
-            mlines.Line2D([], [], linestyle=phase_linestyle[i], label=cloud_phases[i], color='#000000')
-            for i in range(len(cloud_phases))
-        ]
-    )
-    legend.get_frame().set_linewidth(0.8)
+    # legend = plt.legend(handles=
+    #     [mlines.Line2D([], [], linestyle='solid', label='total', color='#000000')] + [
+    #         mlines.Line2D([], [], linestyle=phase_linestyle[i], label=cloud_phases[i], color='#000000')
+    #         for i in range(len(cloud_phases))
+    #     ]
+    # )
+    # legend.get_frame().set_linewidth(0.8)
 
 
 if __name__ == '__main__':
@@ -143,7 +143,6 @@ if __name__ == '__main__':
     parser.add_argument('file', type=str, help='HDF5 input file')
     parser.add_argument('-o', dest='outfile', type=str, help='output plot')
     parser.add_argument('-t', dest='title', type=str, help='plot title', default='')
-    # parser.add_argument('-x', dest='variant', type=str, help='plot variant ()', default='simple', choices=['simple', 'double'])
 
     args = parser.parse_args()
 
@@ -151,21 +150,12 @@ if __name__ == '__main__':
         plt.rcParams['font.family'] = 'Open Sans'
         plt.suptitle(args.title, fontsize=14)
 
-        # if args.variant == 'simple':
         gs = gridspec.GridSpec(1, 2, width_ratios=[3, 1])
-        # elif args.variant == 'double':
-        #     gs = gridspec.GridSpec(2, 2, width_ratios=[3, 1, 3, 1])
 
         plt.subplot(gs[0])
         plot_main(f)
         plt.subplot(gs[1])
         plot_side(f)
-
-        # if args.variant == 'double':
-        #     plt.subplot(gs[2])
-        #     plot_phase_main()
-        #     plt.subplot(gs[3])
-        #     plot_phase_side(f)
 
         plt.subplots_adjust(wspace=0, left=0, right=1)
         plt.savefig(args.outfile, bbox_inches='tight')
