@@ -1,0 +1,15 @@
+{
+    "labels": ["all", "WNC", "SNC", "RAS", "WSC", "WS", "DJF", "MAM", "JJA", "SON"],
+    "files": [
+        "out/cloud_layers_hist_ris_cldclass.h5",
+        "out/cloud_layers_hist_ris_wnc_cldclass.h5",
+        "out/cloud_layers_hist_ris_snc_cldclass.h5",
+        "out/cloud_layers_hist_ris_ras_cldclass.h5",
+        "out/cloud_layers_hist_ris_wsc_cldclass.h5",
+        "out/cloud_layers_hist_ris_ws_cldclass.h5",
+        "out/cloud_layers_hist_ris_djf_cldclass.h5",
+        "out/cloud_layers_hist_ris_mam_cldclass.h5",
+        "out/cloud_layers_hist_ris_jja_cldclass.h5",
+        "out/cloud_layers_hist_ris_son_cldclass.h5"
+    ]
+}

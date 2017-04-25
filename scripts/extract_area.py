@@ -9,15 +9,19 @@ from pyspark import SparkContext
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 from lib import h5_save
-from lib.areas import is_ross_sea, is_ross_ice_shelf, is_any_area
+from lib.areas import is_any_area, is_ross_sea, is_ross_sea_east, is_ross_sea_west, is_ross_ice_shelf, is_ross_ice_shelf_east, is_ross_ice_shelf_west
 from lib.spark.map import unzip, hdfeos, filter_area, select, expect, cloudsat_time
 from lib.spark.filter import not_empty, not_bad
 
 
 AREAS = {
+    'any': is_any_area,
     'ross_sea': is_ross_sea,
+    'ross_sea_east': is_ross_sea_east,
+    'ross_sea_west': is_ross_sea_west,
     'ross_ice_shelf': is_ross_ice_shelf,
-    'any': is_any_area
+    'ross_ice_shelf_east': is_ross_ice_shelf_east,
+    'ross_ice_shelf_west': is_ross_ice_shelf_west
 }
 
 

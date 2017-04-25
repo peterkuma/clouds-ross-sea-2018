@@ -1,0 +1,22 @@
+{
+    "width": 16,
+    "height": 6,
+    "xtitles": ["all", "DJF", "MAM", "JJA", "SON"],
+    "ytitles": ["RS", "RIS"],
+    "files": [
+        [
+            "out/cloud_top_thickness_hist_rs_cldclass.h5",
+            "out/cloud_top_thickness_hist_rs_djf_cldclass.h5",
+            "out/cloud_top_thickness_hist_rs_mam_cldclass.h5",
+            "out/cloud_top_thickness_hist_rs_jja_cldclass.h5",
+            "out/cloud_top_thickness_hist_rs_son_cldclass.h5"
+        ],
+        [
+            "out/cloud_top_thickness_hist_ris_cldclass.h5",
+            "out/cloud_top_thickness_hist_ris_djf_cldclass.h5",
+            "out/cloud_top_thickness_hist_ris_mam_cldclass.h5",
+            "out/cloud_top_thickness_hist_ris_jja_cldclass.h5",
+            "out/cloud_top_thickness_hist_ris_son_cldclass.h5"
+        ]
+    ]
+}

@@ -1,6 +1,6 @@
-numpy
-matplotlib
-h5py
-dpath
-ccplot
-pytz
+numpy==1.11.2
+matplotlib==1.5.3
+pytz==2016.7
+h5py==2.2.1
+dpath==1.4.0
+ccplot==1.5.2

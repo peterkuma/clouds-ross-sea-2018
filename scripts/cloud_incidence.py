@@ -10,8 +10,9 @@ from pyspark import SparkContext
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-from lib.spark.map import h5, select, filter_cloudsat_quality, split, cloudsat_daynight, filter_daynight, filter_coggins_regime, filter_season
+from lib.spark.map import h5, select, filter_cloudsat_quality, split, cloudsat_daynight, filter_daynight, filter_coggins_regime, filter_season, filter_area
 from lib.spark.filter import not_empty
+from lib.areas import areas
 
 
 heights = np.arange(0, 15000)
@@ -110,6 +111,8 @@ if __name__ == '__main__':
     parser.add_argument('-p', dest='product_type', type=str, help='product type', default='2b-geoprof-lidar', choices=['2b-geoprof-lidar', '2b-cldclass-lidar'])
     parser.add_argument('-r', dest='regime', type=str, help='Coggins regime')
     parser.add_argument('-s', dest='season', type=str, help='season')
+    parser.add_argument('-a', dest='area', type=str, help='area', default='any')
+
 
     args = parser.parse_args()
 
@@ -124,6 +127,9 @@ if __name__ == '__main__':
         },
         'layer_base': {
             'dataset': 'layer_base'
+        },
+        'cloud_layers': {
+            'dataset': 'cloud_layers'
         },
         'lat': {
             'dataset': 'lat'
@@ -152,6 +158,7 @@ if __name__ == '__main__':
         .map(filter_cloudsat_quality('data_quality')) \
         .map(filter_coggins_regime(args.regime)) \
         .map(filter_season(args.season)) \
+        .map(filter_area(areas[args.area])) \
         .flatMap(split(10000))
         # .sample(False, 0.01, 1)
 
@@ -184,11 +191,17 @@ if __name__ == '__main__':
         .map(lambda x: x.size) \
         .sum()
 
+    cloud_incidence_clear = rdd \
+        .map(select('datasets/cloud_layers')) \
+        .map(lambda x: np.sum(x == 0)) \
+        .sum()
+
     with h5py.File(args.output, 'w') as f:
         f.create_dataset('cloud_incidence', data=cloud_incidence)
         f.create_dataset('cloud_incidence_by_type', data=cloud_incidence_by_type)
         f.create_dataset('cloud_incidence_by_phase', data=cloud_incidence_by_type_phase)
         f.create_dataset('cloud_incidence_by_type_phase', data=cloud_incidence_by_type_phase)
         f.create_dataset('cloud_incidence_total', data=cloud_incidence_total)
+        f.create_dataset('cloud_incidence_clear', data=cloud_incidence_clear)
 
     sc.stop()

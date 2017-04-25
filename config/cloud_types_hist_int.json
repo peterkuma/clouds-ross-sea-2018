@@ -1,0 +1,62 @@
+{
+    "width": 11,
+    "height": 6,
+    "panels": [
+        {
+            "title": "RS",
+            "sep": [6],
+            "labels": [
+                "all",
+                "WNC",
+                "SNC",
+                "RAS",
+                "WSC",
+                "WS",
+                "DJF",
+                "MAM",
+                "JJA",
+                "SON"
+            ],
+            "files": [
+                "out/cloud_types_hist_int_rs_cldclass.h5",
+                "out/cloud_types_hist_int_rs_wnc_cldclass.h5",
+                "out/cloud_types_hist_int_rs_snc_cldclass.h5",
+                "out/cloud_types_hist_int_rs_ras_cldclass.h5",
+                "out/cloud_types_hist_int_rs_wsc_cldclass.h5",
+                "out/cloud_types_hist_int_rs_ws_cldclass.h5",
+                "out/cloud_types_hist_int_rs_djf_cldclass.h5",
+                "out/cloud_types_hist_int_rs_mam_cldclass.h5",
+                "out/cloud_types_hist_int_rs_jja_cldclass.h5",
+                "out/cloud_types_hist_int_rs_son_cldclass.h5"
+            ]
+        },
+        {
+            "title": "RIS",
+            "sep": [6],
+            "labels": [
+                "all",
+                "WNC",
+                "SNC",
+                "RAS",
+                "WSC",
+                "WS",
+                "DJF",
+                "MAM",
+                "JJA",
+                "SON"
+            ],
+            "files": [
+                "out/cloud_types_hist_int_ris_cldclass.h5",
+                "out/cloud_types_hist_int_ris_wnc_cldclass.h5",
+                "out/cloud_types_hist_int_ris_snc_cldclass.h5",
+                "out/cloud_types_hist_int_ris_ras_cldclass.h5",
+                "out/cloud_types_hist_int_ris_wsc_cldclass.h5",
+                "out/cloud_types_hist_int_ris_ws_cldclass.h5",
+                "out/cloud_types_hist_int_ris_djf_cldclass.h5",
+                "out/cloud_types_hist_int_ris_mam_cldclass.h5",
+                "out/cloud_types_hist_int_ris_jja_cldclass.h5",
+                "out/cloud_types_hist_int_ris_son_cldclass.h5"
+            ]
+        }
+    ]
+}

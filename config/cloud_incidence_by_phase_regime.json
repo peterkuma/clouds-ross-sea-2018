@@ -1,0 +1,38 @@
+{
+    "width": 18,
+    "height": 8,
+    "xtitles": ["WNC", "SNC", "RAS", "WSC", "WS"],
+    "ytitles": ["RS", "RIS"],
+    "files": [
+        [
+            "out/cloud_incidence_rs_wnc_cldclass.h5",
+            "out/cloud_incidence_rs_snc_cldclass.h5",
+            "out/cloud_incidence_rs_ras_cldclass.h5",
+            "out/cloud_incidence_rs_wsc_cldclass.h5",
+            "out/cloud_incidence_rs_ws_cldclass.h5"
+        ],
+        [
+            "out/cloud_incidence_ris_wnc_cldclass.h5",
+            "out/cloud_incidence_ris_snc_cldclass.h5",
+            "out/cloud_incidence_ris_ras_cldclass.h5",
+            "out/cloud_incidence_ris_wsc_cldclass.h5",
+            "out/cloud_incidence_ris_ws_cldclass.h5"
+        ]
+    ],
+    "filesx": [
+        [
+            ["out/cloud_incidence_rs-e_wnc_cldclass.h5", "out/cloud_incidence_rs-w_wnc_cldclass.h5"],
+            ["out/cloud_incidence_rs-e_snc_cldclass.h5", "out/cloud_incidence_rs-w_snc_cldclass.h5"],
+            ["out/cloud_incidence_rs-e_ras_cldclass.h5", "out/cloud_incidence_rs-w_ras_cldclass.h5"],
+            ["out/cloud_incidence_rs-e_wsc_cldclass.h5", "out/cloud_incidence_rs-w_wsc_cldclass.h5"],
+            ["out/cloud_incidence_rs-e_ws_cldclass.h5", "out/cloud_incidence_rs-w_ws_cldclass.h5"]
+        ],
+        [
+            ["out/cloud_incidence_ris-e_wnc_cldclass.h5", "out/cloud_incidence_ris-w_wnc_cldclass.h5"],
+            ["out/cloud_incidence_ris-e_snc_cldclass.h5", "out/cloud_incidence_ris-w_snc_cldclass.h5"],
+            ["out/cloud_incidence_ris-e_ras_cldclass.h5", "out/cloud_incidence_ris-w_ras_cldclass.h5"],
+            ["out/cloud_incidence_ris-e_wsc_cldclass.h5", "out/cloud_incidence_ris-w_wsc_cldclass.h5"],
+            ["out/cloud_incidence_ris-e_ws_cldclass.h5", "out/cloud_incidence_ris-w_ws_cldclass.h5"]
+        ]
+    ]
+}

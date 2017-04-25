@@ -1,0 +1,20 @@
+{
+    "classes": [
+        [
+            "out/cloud_incidence_ris_cldclass.h5"
+        ],
+        [
+            "out/cloud_incidence_ris_wnc_cldclass.h5",
+            "out/cloud_incidence_ris_snc_cldclass.h5",
+            "out/cloud_incidence_ris_ras_cldclass.h5",
+            "out/cloud_incidence_ris_wsc_cldclass.h5",
+            "out/cloud_incidence_ris_ws_cldclass.h5"
+        ], [
+            "out/cloud_incidence_ris_djf_cldclass.h5",
+            "out/cloud_incidence_ris_mam_cldclass.h5",
+            "out/cloud_incidence_ris_jja_cldclass.h5",
+            "out/cloud_incidence_ris_son_cldclass.h5"
+        ]
+    ],
+    "labels": ["reference", "regime", "season"]
+}

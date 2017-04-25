@@ -1,0 +1,34 @@
+{
+    "width": 14,
+    "height": 8,
+    "xtitles": ["DJF", "MAM", "JJA", "SON"],
+    "ytitles": ["RS", "RIS"],
+    "files": [
+        [
+            "out/cloud_incidence_rs_djf_cldclass.h5",
+            "out/cloud_incidence_rs_mam_cldclass.h5",
+            "out/cloud_incidence_rs_jja_cldclass.h5",
+            "out/cloud_incidence_rs_son_cldclass.h5"
+        ],
+        [
+            "out/cloud_incidence_ris_djf_cldclass.h5",
+            "out/cloud_incidence_ris_mam_cldclass.h5",
+            "out/cloud_incidence_ris_jja_cldclass.h5",
+            "out/cloud_incidence_ris_son_cldclass.h5"
+        ]
+    ],
+    "filesx": [
+        [
+            ["out/cloud_incidence_rs-e_djf_cldclass.h5", "out/cloud_incidence_rs-w_djf_cldclass.h5"],
+            ["out/cloud_incidence_rs-e_mam_cldclass.h5", "out/cloud_incidence_rs-w_mam_cldclass.h5"],
+            ["out/cloud_incidence_rs-e_jja_cldclass.h5", "out/cloud_incidence_rs-w_jja_cldclass.h5"],
+            ["out/cloud_incidence_rs-e_son_cldclass.h5", "out/cloud_incidence_rs-w_son_cldclass.h5"]
+        ],
+        [
+            ["out/cloud_incidence_ris-e_djf_cldclass.h5", "out/cloud_incidence_ris-w_djf_cldclass.h5"],
+            ["out/cloud_incidence_ris-e_mam_cldclass.h5", "out/cloud_incidence_ris-w_mam_cldclass.h5"],
+            ["out/cloud_incidence_ris-e_jja_cldclass.h5", "out/cloud_incidence_ris-w_jja_cldclass.h5"],
+            ["out/cloud_incidence_ris-e_son_cldclass.h5", "out/cloud_incidence_ris-w_son_cldclass.h5"]
+        ]
+    ]
+}
