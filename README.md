@@ -5,8 +5,7 @@ Peter Kuma <<peter.kuma@pg.canterbury.ac.nz>>²,
 Adrian McDonald <<adrian.mcdonald@canterbury.ac.nz>>²,
 Simon Parsons <<simon.parsons@canterbury.ac.nz>>²
 
-¹Landcare Research, Lincoln, New Zealand\
-²University of Canterbury, Christchurch, New Zealand
+¹Landcare Research, Lincoln, New Zealand, ²University of Canterbury, Christchurch, New Zealand
 
 This repository contains scientific datasets and scripts for processing CloudSat
 datasets and producing results presented in the paper
@@ -29,7 +28,7 @@ is strongly preferrable.
 
 The following programs need to be installed:
 
-- Spark >= 2.0.1
+- [Spark](https://spark.apache.org/) >= 2.0.1
 - Python 2.7
 
 On most Linux distributions Python can be found in the package manager,
@@ -53,7 +52,8 @@ virtual environment (virtualenv):
 
 ### Optional
 
-Needed only for generating the map in Figure 1:
+The following software is needed only for generating the map in Figure 1
+(script `map.R`).
 
 - [R](https://www.r-project.org/)
 - R packages:

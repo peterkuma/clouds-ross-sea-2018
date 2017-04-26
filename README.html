@@ -31,14 +31,14 @@ h='&#x63;&#x61;&#110;&#116;&#x65;&#114;&#98;&#x75;&#114;&#x79;&#46;&#x61;&#x63;&
 document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+e+'<\/'+'a'+'>');
 // -->
 </script><noscript>&#x73;&#x69;&#x6d;&#x6f;&#110;&#46;&#112;&#x61;&#114;&#x73;&#x6f;&#110;&#x73;&#32;&#x61;&#116;&#32;&#x63;&#x61;&#110;&#116;&#x65;&#114;&#98;&#x75;&#114;&#x79;&#32;&#100;&#x6f;&#116;&#32;&#x61;&#x63;&#32;&#100;&#x6f;&#116;&#32;&#110;&#122;</noscript>&gt;²</p>
-<p>¹Landcare Research, Lincoln, New Zealand<br />²University of Canterbury, Christchurch, New Zealand</p>
+<p>¹Landcare Research, Lincoln, New Zealand, ²University of Canterbury, Christchurch, New Zealand</p>
 <p>This repository contains scientific datasets and scripts for processing CloudSat datasets and producing results presented in the paper <em>An analysis of the cloud environment over the Ross Sea and Ross Ice Shelf using CloudSat/CALIPSO satellites: The importance of Synoptic Forcing</em>.</p>
 <h2 id="setup">Setup</h2>
 <p>It is recommended that the scripts are run on Linux or another unix-like operating system. Most scripts are written in the Python programming language. Some of the scripts need to be run on the <a href="https://spark.apache.org/">Spark</a> cluster computing platform. Note that Spark does not require cluster deployment, it works equally well when run locally on a single machine with 4 GB RAM or more.</p>
 <p>For running on Windows we recommended the <a href="https://www.continuum.io/downloads">Anaconda Python distribution</a>, although we haven't attempted to run the code on this platform, and Linux is strongly preferrable.</p>
 <p>The following programs need to be installed:</p>
 <ul>
-<li>Spark &gt;= 2.0.1</li>
+<li><a href="https://spark.apache.org/">Spark</a> &gt;= 2.0.1</li>
 <li>Python 2.7</li>
 </ul>
 <p>On most Linux distributions Python can be found in the package manager, and Spark is available as a <a href="https://spark.apache.org/downloads.html">binary package on their website</a>.</p>
@@ -56,7 +56,7 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+e+'<\/'+'a'+'>');
 . env/bin/activate
 pip install -r requirements.txt</code></pre>
 <h3 id="optional">Optional</h3>
-<p>Needed only for generating the map in Figure 1:</p>
+<p>The following software is needed only for generating the map in Figure 1 (script <code>map.R</code>).</p>
 <ul>
 <li><a href="https://www.r-project.org/">R</a></li>
 <li>R packages:
