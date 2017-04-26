@@ -1,4 +1,4 @@
-# Scientific Dataset: An analysis of the cloud environment over the Ross Sea and Ross Ice Shelf using CloudSat/CALIPSO satellites: The importance of Synoptic Forcing
+# Code and data for the paper "An analysis of the cloud environment over the Ross Sea and Ross Ice Shelf using CloudSat/CALIPSO satellites: The importance of Synoptic Forcing"
 
 Ben Jolly <<jollyb@landcareresearch.co.nz>>¹,
 Peter Kuma <<peter.kuma@pg.canterbury.ac.nz>>²,
@@ -13,24 +13,27 @@ datasets and producing results presented in the paper
 *An analysis of the cloud environment over the Ross Sea and Ross Ice Shelf
 using CloudSat/CALIPSO satellites: The importance of Synoptic Forcing*.
 
-## Requirements
+## Setup
 
 It is recommended that the scripts are run on Linux or another unix-like
 operating system. Most scripts are written in the Python programming language.
-Some of the scripts are to be run on the [Spark](https://spark.apache.org/)
+Some of the scripts need to be run on the [Spark](https://spark.apache.org/)
 cluster computing platform.
 Note that Spark does not require cluster deployment, it works equally well
 when run locally on a single machine with 4 GB RAM or more.
 
 For running on Windows we recommended the
-[Anaconda Python distribution](https://www.continuum.io/downloads).
+[Anaconda Python distribution](https://www.continuum.io/downloads),
+although we haven't attempted to run the code on this platform, and Linux
+is strongly preferrable.
 
 The following programs need to be installed:
 
 - Spark >= 2.0.1
 - Python 2.7
 
-**Note:** On most Linux distributions these can be found in the package manager.
+On most Linux distributions Python can be found in the package manager,
+and Spark is available as a [binary package on their website](https://spark.apache.org/downloads.html).
 
 Python libraries:
 
@@ -48,9 +51,20 @@ virtual environment (virtualenv):
     . env/bin/activate
     pip install -r requirements.txt
 
-Optional (needed only for generating map in Figure 1):
+### Optional
+
+Needed only for generating the map in Figure 1:
 
 - [R](https://www.r-project.org/)
+- R packages:
+    - raster
+    - sp
+    - rgdal
+    - rgeos
+    - maptools
+    - geosphere
+    - RColorBrewer
+    - graticule
 
 ## Source Datasets
 
@@ -65,13 +79,17 @@ CloudSat DPC FTP server
 at [ftp://ftp.cloudsat.cira.colostate.edu](ftp://ftp.cloudsat.cira.colostate.edu)
 after creating an account on [CloudSat DPC](http://www.cloudsat.cira.colostate.edu/).
 
+The product files do not need to be unpacked, the code expects the directory
+structure "as is".
+
 ## Figures and Tables
 
 The following sections list scripts names used to produce figures and tables
 in the paper. Please see the reference section below for a full description
-of the scripts.
+of the scripts. **Scripts** is a list of scripts which need to be run in order to
+produce the figure or table.
 
-**Note:** This repository also contains scripts which may
+This repository also contains scripts which may
 be useful for additional analysis, but were not used directly to produce
 results presented in the paper.
 
@@ -150,19 +168,22 @@ that rows sum to 100 %.
 
 **Scripts:** [ross_area_files.py](scripts/ross_area_files.py), [extract_area.py](scripts/extract_area.py), [regime_season_hist.py](regime_season_hist.py), [print_regime_season_table.py](scripts/print_regime_season_table.py)
 
-## Repository Contents
+## Repository Content
 
-- `config` - configuration files
-- `doc` - documents
+- `config` - configuration files needed by the scripts
 - `img` - figure images
 - `lib` - additional python modules used by the scripts
-- `out` - output files
+- `out` - output files (intermediate data files and plots)
 - `scripts` - data processing and plotting scripts
 
 ## Reference
 
 Use `spark-submit scripts/<script>.py --help` for more information about how
-to submit the scripts.
+to submit the scripts. The Spark cluster does not need to be running,
+`spark-submit` starts a local instance as needed (you only need to make
+sure that `spark-submit` is in your `PATH` environmental variable).
+
+Intermediate data files are stored as HDF5 and plots as PNG or PDF.
 
 ### ross_area_files.py
 

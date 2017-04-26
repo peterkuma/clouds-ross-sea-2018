@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="github.css" type="text/css" />
 </head>
 <body>
-<h1 id="scientific-dataset-an-analysis-of-the-cloud-environment-over-the-ross-sea-and-ross-ice-shelf-using-cloudsatcalipso-satellites-the-importance-of-synoptic-forcing">Scientific Dataset: An analysis of the cloud environment over the Ross Sea and Ross Ice Shelf using CloudSat/CALIPSO satellites: The importance of Synoptic Forcing</h1>
+<h1 id="code-and-data-for-the-paper-an-analysis-of-the-cloud-environment-over-the-ross-sea-and-ross-ice-shelf-using-cloudsatcalipso-satellites-the-importance-of-synoptic-forcing">Code and data for the paper &quot;An analysis of the cloud environment over the Ross Sea and Ross Ice Shelf using CloudSat/CALIPSO satellites: The importance of Synoptic Forcing&quot;</h1>
 <p>Ben Jolly &lt;<script type="text/javascript">
 <!--
 h='&#108;&#x61;&#110;&#100;&#x63;&#x61;&#114;&#x65;&#114;&#x65;&#x73;&#x65;&#x61;&#114;&#x63;&#104;&#46;&#x63;&#x6f;&#46;&#110;&#122;';a='&#64;';n='&#106;&#x6f;&#108;&#108;&#x79;&#98;';e=n+a+h;
@@ -33,15 +33,15 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+e+'<\/'+'a'+'>');
 </script><noscript>&#x73;&#x69;&#x6d;&#x6f;&#110;&#46;&#112;&#x61;&#114;&#x73;&#x6f;&#110;&#x73;&#32;&#x61;&#116;&#32;&#x63;&#x61;&#110;&#116;&#x65;&#114;&#98;&#x75;&#114;&#x79;&#32;&#100;&#x6f;&#116;&#32;&#x61;&#x63;&#32;&#100;&#x6f;&#116;&#32;&#110;&#122;</noscript>&gt;²</p>
 <p>¹Landcare Research, Lincoln, New Zealand<br />²University of Canterbury, Christchurch, New Zealand</p>
 <p>This repository contains scientific datasets and scripts for processing CloudSat datasets and producing results presented in the paper <em>An analysis of the cloud environment over the Ross Sea and Ross Ice Shelf using CloudSat/CALIPSO satellites: The importance of Synoptic Forcing</em>.</p>
-<h2 id="requirements">Requirements</h2>
-<p>It is recommended that the scripts are run on Linux or another unix-like operating system. Most scripts are written in the Python programming language. Some of the scripts are to be run on the <a href="https://spark.apache.org/">Spark</a> cluster computing platform. Note that Spark does not require cluster deployment, it works equally well when run locally on a single machine with 4 GB RAM or more.</p>
-<p>For running on Windows we recommended the <a href="https://www.continuum.io/downloads">Anaconda Python distribution</a>.</p>
+<h2 id="setup">Setup</h2>
+<p>It is recommended that the scripts are run on Linux or another unix-like operating system. Most scripts are written in the Python programming language. Some of the scripts need to be run on the <a href="https://spark.apache.org/">Spark</a> cluster computing platform. Note that Spark does not require cluster deployment, it works equally well when run locally on a single machine with 4 GB RAM or more.</p>
+<p>For running on Windows we recommended the <a href="https://www.continuum.io/downloads">Anaconda Python distribution</a>, although we haven't attempted to run the code on this platform, and Linux is strongly preferrable.</p>
 <p>The following programs need to be installed:</p>
 <ul>
 <li>Spark &gt;= 2.0.1</li>
 <li>Python 2.7</li>
 </ul>
-<p><strong>Note:</strong> On most Linux distributions these can be found in the package manager.</p>
+<p>On most Linux distributions Python can be found in the package manager, and Spark is available as a <a href="https://spark.apache.org/downloads.html">binary package on their website</a>.</p>
 <p>Python libraries:</p>
 <ul>
 <li>numpy == 1.11.2</li>
@@ -55,9 +55,21 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+e+'<\/'+'a'+'>');
 <pre><code>virtualenv env
 . env/bin/activate
 pip install -r requirements.txt</code></pre>
-<p>Optional (needed only for generating map in Figure 1):</p>
+<h3 id="optional">Optional</h3>
+<p>Needed only for generating the map in Figure 1:</p>
 <ul>
 <li><a href="https://www.r-project.org/">R</a></li>
+<li>R packages:
+<ul>
+<li>raster</li>
+<li>sp</li>
+<li>rgdal</li>
+<li>rgeos</li>
+<li>maptools</li>
+<li>geosphere</li>
+<li>RColorBrewer</li>
+<li>graticule</li>
+</ul></li>
 </ul>
 <h2 id="source-datasets">Source Datasets</h2>
 <p>In order to run the scripts the following products should be available on your file system:</p>
@@ -66,9 +78,10 @@ pip install -r requirements.txt</code></pre>
 <li><strong>Optional:</strong> <a href="http://www.cloudsat.cira.colostate.edu/data-products/level-2b/2b-geoprof-lidar?term=48">CloudSat 2B-GEOPROF-LIDAR P2_R04 products (2006-2011)</a></li>
 </ul>
 <p>You can download the complete datasets from the CloudSat DPC FTP server at <a href="ftp://ftp.cloudsat.cira.colostate.edu">ftp://ftp.cloudsat.cira.colostate.edu</a> after creating an account on <a href="http://www.cloudsat.cira.colostate.edu/">CloudSat DPC</a>.</p>
+<p>The product files do not need to be unpacked, the code expects the directory structure &quot;as is&quot;.</p>
 <h2 id="figures-and-tables">Figures and Tables</h2>
-<p>The following sections list scripts names used to produce figures and tables in the paper. Please see the reference section below for a full description of the scripts.</p>
-<p><strong>Note:</strong> This repository also contains scripts which may be useful for additional analysis, but were not used directly to produce results presented in the paper.</p>
+<p>The following sections list scripts names used to produce figures and tables in the paper. Please see the reference section below for a full description of the scripts. <strong>Scripts</strong> is a list of scripts which need to be run in order to produce the figure or table.</p>
+<p>This repository also contains scripts which may be useful for additional analysis, but were not used directly to produce results presented in the paper.</p>
 <h3 id="figure-1">Figure 1</h3>
 <p><a href="out/map.pdf"><img src="img/map.png" /></a></p>
 <p>Topographic map of the RIS and Ross Sea showing boundary of the study area (thick blue line) and border between the RIS and Ross Sea sectors. (Map is based on the SCAR Antarctic Digital Database.)</p>
@@ -100,17 +113,17 @@ pip install -r requirements.txt</code></pre>
 <h3 id="table-2">Table 2</h3>
 <p>The relative frequency of occurrence of the Coggins regimes annually and seasonally in the observational data (%). Values for seasons are normalized so that rows sum to 100 %.</p>
 <p><strong>Scripts:</strong> <a href="scripts/ross_area_files.py">ross_area_files.py</a>, <a href="scripts/extract_area.py">extract_area.py</a>, <a href="regime_season_hist.py">regime_season_hist.py</a>, <a href="scripts/print_regime_season_table.py">print_regime_season_table.py</a></p>
-<h2 id="repository-contents">Repository Contents</h2>
+<h2 id="repository-content">Repository Content</h2>
 <ul>
-<li><code>config</code> - configuration files</li>
-<li><code>doc</code> - documents</li>
+<li><code>config</code> - configuration files needed by the scripts</li>
 <li><code>img</code> - figure images</li>
 <li><code>lib</code> - additional python modules used by the scripts</li>
-<li><code>out</code> - output files</li>
+<li><code>out</code> - output files (intermediate data files and plots)</li>
 <li><code>scripts</code> - data processing and plotting scripts</li>
 </ul>
 <h2 id="reference">Reference</h2>
-<p>Use <code>spark-submit scripts/&lt;script&gt;.py --help</code> for more information about how to submit the scripts.</p>
+<p>Use <code>spark-submit scripts/&lt;script&gt;.py --help</code> for more information about how to submit the scripts. The Spark cluster does not need to be running, <code>spark-submit</code> starts a local instance as needed (you only need to make sure that <code>spark-submit</code> is in your <code>PATH</code> environmental variable).</p>
+<p>Intermediate data files are stored as HDF5 and plots as PNG or PDF.</p>
 <h3 id="ross_area_files.py">ross_area_files.py</h3>
 <p>Output a list of CloudSat HDF-EOS2 files containing data over the Ross Sea/Ross Ice Shelf area.</p>
 <pre><code>spark-submit scripts/ross_area_files.py &#39;/data/datasets/cloudsat/2b-geoprof-lidar/*/*/*.zip&#39; 2&gt;/dev/null &gt; out/ross_area_files
