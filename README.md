@@ -30,9 +30,11 @@ The following programs need to be installed:
 
 - [Spark](https://spark.apache.org/) >= 2.0.1
 - Python 2.7
+- GNU Make
 
-On most Linux distributions Python can be found in the package manager,
-and Spark is available as a [binary package on their website](https://spark.apache.org/downloads.html).
+On most Linux distributions Python and GNU Make can be found in the package
+manager, while Spark is available as a
+[binary package on their website](https://spark.apache.org/downloads.html).
 
 Python libraries:
 
@@ -53,7 +55,7 @@ virtual environment (virtualenv):
 ### Optional
 
 The following software is needed only for generating the map in Figure 1
-(script `map.R`).
+(script `map.R`):
 
 - [R](https://www.r-project.org/)
 - R packages:
@@ -65,6 +67,11 @@ The following software is needed only for generating the map in Figure 1
     - geosphere
     - RColorBrewer
     - graticule
+
+The following software is needed for conversion between graphical formats
+(PDF to PNG):
+
+- ImageMagick
 
 ## Source Datasets
 
@@ -171,10 +178,34 @@ that rows sum to 100 %.
 ## Repository Content
 
 - `config` - configuration files needed by the scripts
+- `data` - intermediate data files
 - `img` - figure images
 - `lib` - additional python modules used by the scripts
-- `out` - output files (intermediate data files and plots)
+- `plots` - plots
 - `scripts` - data processing and plotting scripts
+
+## Usage
+
+To produce all plots and intermediate data from the CloudSat products, use:
+
+    make
+
+You can also specify a target to produce subset of results with:
+
+    make <target>
+
+or
+
+    make plots/<name>.pdf
+
+where `<name>` is the name of the plot and `<target>` is one of:
+
+- `map` - the map
+- `cloud_top_hist`
+- `profile_sample`
+- `cloud_top_base_scatter`
+
+Targets correspond to the scripts described in the reference section.
 
 ## Reference
 
@@ -184,6 +215,10 @@ to submit the scripts. The Spark cluster does not need to be running,
 sure that `spark-submit` is in your `PATH` environmental variable).
 
 Intermediate data files are stored as HDF5 and plots as PNG or PDF.
+
+### map.R
+
+    scripts/map.R plots/map.pdf /data/datasets/add/
 
 ### ross_area_files.py
 
@@ -242,13 +277,20 @@ Plot a profile sample.
 
 ### cloud_top_base_scatter.py
 
-Plot cloud top/cloud base scatter plot from a sample of data.
+Plot cloud top vs. cloud base scatter plot from a sample of data.
 
     spark-submit scripts/cloud_top_base_scatter.py -t 'Cloud top/base scatter plot (Ross Sea, 2B-GEOPROF-LIDAR)' -o plots/cloud_top_base_scatter_rs.png data/ross_sea.h5 2>/dev/null
     spark-submit scripts/cloud_top_base_scatter.py -t 'Cloud top/base scatter plot (Ross Ice Shelf, 2B-GEOPROF-LIDAR)' -o plots/cloud_top_base_scatter_ris.png data/ross_ice_shelf.h5 2>/dev/null
 
     spark-submit scripts/cloud_top_base_scatter.py -t 'Cloud top/base scatter plot (Ross Sea, 2B-CLDCLASS-LIDAR)' -o plots/cloud_top_base_scatter_rs_cldclass.png data/ross_sea_cldclass.h5 2>/dev/null
     spark-submit scripts/cloud_top_base_scatter.py -t 'Cloud top/base scatter plot (Ross Ice Shelf, 2B-CLDCLASS-LIDAR)' -o plots/cloud_top_base_scatter_ris_cldclass.png data/ross_ice_shelf_cldclass.h5 2>/dev/null
+
+### cloud_top_base_scatter_multi.py
+
+Plot cloud top vs. cloud base scatter plot from a sample of data
+(multiple panels).
+
+    spark-submit scripts/cloud_top_base_scatter_multi.py -c config/cloud_top_base_scatter_multi.json -o $@ 2>/dev/null
 
 ### cloud_incidence.py
 
@@ -355,6 +397,12 @@ Plot cloud incidence by phase histogram.
         python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Ice Shelf, ${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o plots/cloud_incidence_by_phase_ris_${season}_cldclass.png data/cloud_incidence_ris_${season}_cldclass.h5
     done
 
+### plot_cloud_incidence_multi.py
+
+Plot cloud incidence as a function of height (multiple datasets).
+
+    python scripts/plot_cloud_incidence_multi.py -o plots/cloud_incidence_multi.pdf -c config/cloud_incidence_multi.json
+
 ### cloud_incidence_map_8000_8300
 
 Calculate cloud incidence map for two heights (8000 m and 8300 m).
@@ -363,14 +411,21 @@ Calculate cloud incidence map for two heights (8000 m and 8300 m).
 
 ### plot_correction_factor.py
 
-Plot a map of cloud incidence correction factor (cloud incidence at 8000 m over cloud incidence at
-8300 m).
+Plot a map of cloud incidence correction factor (cloud incidence at 8300 m over
+cloud incidence at 8000 m).
 
     python scripts/plot_correction_factor.py data/cloud_incidence_map_8000_8300.h5 -t 'Cloud incidence correction factor 8000 m vs. 8300 m' -o plots/correction_factor.pdf
 
     python scripts/plot_correction_factor.py data/cloud_incidence_map_8000_8300_djf.h5 -t 'Cloud incidence correction factor 8000 m vs. 8300 m (DJF)' -o plots/correction_factor_djf.pdf
 
     python scripts/plot_correction_factor.py data/cloud_incidence_map_8000_8300_jja.h5 -t 'Cloud incidence correction factor 8000 m vs. 8300 m (JJA)' -o plots/correction_factor_jja.pdf
+
+### plot_correction_factor_multi.py
+
+Plot a map of cloud incidence correction factor (cloud incidence at 8300 m over
+cloud incidence at 8300 m) (multiple panels).
+
+    python scripts/plot_correction_factor_multi.py -o plots/correction_factor_multi.pdf -c config/correction_factor_multi.json
 
 ### plot_regimes.py
 
@@ -502,7 +557,7 @@ Count the number of profiles.
             echo "RIS-E,${season^^},$(spark-submit scripts/count.py -s "$season" -a ross_ice_shelf_east data/ross_ice_shelf_cldclass.h5 2>/dev/null)"
             echo "RIS-W,${season^^},$(spark-submit scripts/count.py -s "$season" -a ross_ice_shelf_west data/ross_ice_shelf_cldclass.h5 2>/dev/null)"
         done
-    ' > plots/counts.csv
+    ' > data/counts.csv
 
 ### cloud_types_hist.py
 
@@ -658,7 +713,3 @@ Regime-season histogram.
 Print regime-season table.
 
     python scripts/print_regime_season_table.py data/regime_season_hist.h5
-
-### map.R
-
-    scripts/map.py -o plots/map.pdf

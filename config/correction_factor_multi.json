@@ -1,0 +1,12 @@
+{
+    "files": [
+        "data/cloud_incidence_map_8000_8300.h5",
+        "data/cloud_incidence_map_8000_8300_djf.h5",
+        "data/cloud_incidence_map_8000_8300_jja.h5"
+    ],
+    "labels": [
+        "all",
+        "DJF",
+        "JJA"
+    ]
+}

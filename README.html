@@ -40,8 +40,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+e+'<\/'+'a'+'>');
 <ul>
 <li><a href="https://spark.apache.org/">Spark</a> &gt;= 2.0.1</li>
 <li>Python 2.7</li>
+<li>GNU Make</li>
 </ul>
-<p>On most Linux distributions Python can be found in the package manager, and Spark is available as a <a href="https://spark.apache.org/downloads.html">binary package on their website</a>.</p>
+<p>On most Linux distributions Python and GNU Make can be found in the package manager, while Spark is available as a <a href="https://spark.apache.org/downloads.html">binary package on their website</a>.</p>
 <p>Python libraries:</p>
 <ul>
 <li>numpy == 1.11.2</li>
@@ -56,7 +57,7 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+e+'<\/'+'a'+'>');
 . env/bin/activate
 pip install -r requirements.txt</code></pre>
 <h3 id="optional">Optional</h3>
-<p>The following software is needed only for generating the map in Figure 1 (script <code>map.R</code>).</p>
+<p>The following software is needed only for generating the map in Figure 1 (script <code>map.R</code>):</p>
 <ul>
 <li><a href="https://www.r-project.org/">R</a></li>
 <li>R packages:
@@ -70,6 +71,10 @@ pip install -r requirements.txt</code></pre>
 <li>RColorBrewer</li>
 <li>graticule</li>
 </ul></li>
+</ul>
+<p>The following software is needed for conversion between graphical formats (PDF to PNG):</p>
+<ul>
+<li>ImageMagick</li>
 </ul>
 <h2 id="source-datasets">Source Datasets</h2>
 <p>In order to run the scripts the following products should be available on your file system:</p>
@@ -116,14 +121,32 @@ pip install -r requirements.txt</code></pre>
 <h2 id="repository-content">Repository Content</h2>
 <ul>
 <li><code>config</code> - configuration files needed by the scripts</li>
+<li><code>data</code> - intermediate data files</li>
 <li><code>img</code> - figure images</li>
 <li><code>lib</code> - additional python modules used by the scripts</li>
-<li><code>out</code> - output files (intermediate data files and plots)</li>
+<li><code>plots</code> - plots</li>
 <li><code>scripts</code> - data processing and plotting scripts</li>
 </ul>
+<h2 id="usage">Usage</h2>
+<p>To produce all plots and intermediate data from the CloudSat products, use:</p>
+<pre><code>make</code></pre>
+<p>You can also specify a target to produce subset of results with:</p>
+<pre><code>make &lt;target&gt;</code></pre>
+<p>or</p>
+<pre><code>make plots/&lt;name&gt;.pdf</code></pre>
+<p>where <code>&lt;name&gt;</code> is the name of the plot and <code>&lt;target&gt;</code> is one of:</p>
+<ul>
+<li><code>map</code> - the map</li>
+<li><code>cloud_top_hist</code></li>
+<li><code>profile_sample</code></li>
+<li><code>cloud_top_base_scatter</code></li>
+</ul>
+<p>Targets correspond to the scripts described in the reference section.</p>
 <h2 id="reference">Reference</h2>
 <p>Use <code>spark-submit scripts/&lt;script&gt;.py --help</code> for more information about how to submit the scripts. The Spark cluster does not need to be running, <code>spark-submit</code> starts a local instance as needed (you only need to make sure that <code>spark-submit</code> is in your <code>PATH</code> environmental variable).</p>
 <p>Intermediate data files are stored as HDF5 and plots as PNG or PDF.</p>
+<h3 id="map.r">map.R</h3>
+<pre><code>scripts/map.R plots/map.pdf /data/datasets/add/</code></pre>
 <h3 id="ross_area_files.py">ross_area_files.py</h3>
 <p>Output a list of CloudSat HDF-EOS2 files containing data over the Ross Sea/Ross Ice Shelf area.</p>
 <pre><code>spark-submit scripts/ross_area_files.py &#39;/data/datasets/cloudsat/2b-geoprof-lidar/*/*/*.zip&#39; 2&gt;/dev/null &gt; plots/ross_area_files
@@ -167,12 +190,15 @@ done</code></pre>
 <pre><code>spark-submit scripts/profile_sample.py -o plots/profile_sample_rs.pdf data/ross_sea.h5 2&gt;/dev/null
 spark-submit scripts/profile_sample.py -o plots/profile_sample_ris.pdf data/ross_ice_shelf.h5 2&gt;/dev/null</code></pre>
 <h3 id="cloud_top_base_scatter.py">cloud_top_base_scatter.py</h3>
-<p>Plot cloud top/cloud base scatter plot from a sample of data.</p>
+<p>Plot cloud top vs. cloud base scatter plot from a sample of data.</p>
 <pre><code>spark-submit scripts/cloud_top_base_scatter.py -t &#39;Cloud top/base scatter plot (Ross Sea, 2B-GEOPROF-LIDAR)&#39; -o plots/cloud_top_base_scatter_rs.png data/ross_sea.h5 2&gt;/dev/null
 spark-submit scripts/cloud_top_base_scatter.py -t &#39;Cloud top/base scatter plot (Ross Ice Shelf, 2B-GEOPROF-LIDAR)&#39; -o plots/cloud_top_base_scatter_ris.png data/ross_ice_shelf.h5 2&gt;/dev/null
 
 spark-submit scripts/cloud_top_base_scatter.py -t &#39;Cloud top/base scatter plot (Ross Sea, 2B-CLDCLASS-LIDAR)&#39; -o plots/cloud_top_base_scatter_rs_cldclass.png data/ross_sea_cldclass.h5 2&gt;/dev/null
 spark-submit scripts/cloud_top_base_scatter.py -t &#39;Cloud top/base scatter plot (Ross Ice Shelf, 2B-CLDCLASS-LIDAR)&#39; -o plots/cloud_top_base_scatter_ris_cldclass.png data/ross_ice_shelf_cldclass.h5 2&gt;/dev/null</code></pre>
+<h3 id="cloud_top_base_scatter_multi.py">cloud_top_base_scatter_multi.py</h3>
+<p>Plot cloud top vs. cloud base scatter plot from a sample of data (multiple panels).</p>
+<pre><code>spark-submit scripts/cloud_top_base_scatter_multi.py -c config/cloud_top_base_scatter_multi.json -o $@ 2&gt;/dev/null</code></pre>
 <h3 id="cloud_incidence.py">cloud_incidence.py</h3>
 <p>Produce cloud incidence histogram.</p>
 <pre><code>spark-submit scripts/cloud_incidence.py data/ross_sea.h5 -o data/cloud_incidence_rs.h5 2&gt;/dev/null
@@ -265,16 +291,22 @@ done
 for season in djf mam jja son; do
     python scripts/plot_cloud_incidence_by_phase.py -t &quot;Cloud incidence by phase (Ross Ice Shelf, ${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)&quot; -o plots/cloud_incidence_by_phase_ris_${season}_cldclass.png data/cloud_incidence_ris_${season}_cldclass.h5
 done</code></pre>
+<h3 id="plot_cloud_incidence_multi.py">plot_cloud_incidence_multi.py</h3>
+<p>Plot cloud incidence as a function of height (multiple datasets).</p>
+<pre><code>python scripts/plot_cloud_incidence_multi.py -o plots/cloud_incidence_multi.pdf -c config/cloud_incidence_multi.json</code></pre>
 <h3 id="cloud_incidence_map_8000_8300">cloud_incidence_map_8000_8300</h3>
 <p>Calculate cloud incidence map for two heights (8000 m and 8300 m).</p>
 <pre><code>spark-submit scripts/cloud_incidence_map_8000_8300.py -o data/cloud_incidence_map_8000_8300.h5 &#39;/data/datasets/cloudsat/2b-geoprof-lidar/*/*/*.zip&#39; 2&gt;/dev/null</code></pre>
 <h3 id="plot_correction_factor.py">plot_correction_factor.py</h3>
-<p>Plot a map of cloud incidence correction factor (cloud incidence at 8000 m over cloud incidence at 8300 m).</p>
+<p>Plot a map of cloud incidence correction factor (cloud incidence at 8300 m over cloud incidence at 8000 m).</p>
 <pre><code>python scripts/plot_correction_factor.py data/cloud_incidence_map_8000_8300.h5 -t &#39;Cloud incidence correction factor 8000 m vs. 8300 m&#39; -o plots/correction_factor.pdf
 
 python scripts/plot_correction_factor.py data/cloud_incidence_map_8000_8300_djf.h5 -t &#39;Cloud incidence correction factor 8000 m vs. 8300 m (DJF)&#39; -o plots/correction_factor_djf.pdf
 
 python scripts/plot_correction_factor.py data/cloud_incidence_map_8000_8300_jja.h5 -t &#39;Cloud incidence correction factor 8000 m vs. 8300 m (JJA)&#39; -o plots/correction_factor_jja.pdf</code></pre>
+<h3 id="plot_correction_factor_multi.py">plot_correction_factor_multi.py</h3>
+<p>Plot a map of cloud incidence correction factor (cloud incidence at 8300 m over cloud incidence at 8300 m) (multiple panels).</p>
+<pre><code>python scripts/plot_correction_factor_multi.py -o plots/correction_factor_multi.pdf -c config/correction_factor_multi.json</code></pre>
 <h3 id="plot_regimes.py">plot_regimes.py</h3>
 <p>Plot regimes distribution by month.</p>
 <pre><code>python scripts/plot_regimes.py -t &#39;Regimes distribution by month (2007-2010)&#39; -o plots/regimes.pdf</code></pre>
@@ -379,7 +411,7 @@ python scripts/plot_cloud_layers_hist.py -o plots/cloud_layers_hist_ris_cldclass
         echo &quot;RIS-E,${season^^},$(spark-submit scripts/count.py -s &quot;$season&quot; -a ross_ice_shelf_east data/ross_ice_shelf_cldclass.h5 2&gt;/dev/null)&quot;
         echo &quot;RIS-W,${season^^},$(spark-submit scripts/count.py -s &quot;$season&quot; -a ross_ice_shelf_west data/ross_ice_shelf_cldclass.h5 2&gt;/dev/null)&quot;
     done
-&#39; &gt; plots/counts.csv</code></pre>
+&#39; &gt; data/counts.csv</code></pre>
 <h3 id="cloud_types_hist.py">cloud_types_hist.py</h3>
 <p>Cloud types histogram.</p>
 <pre><code>spark-submit scripts/cloud_types_hist.py -o data/cloud_types_hist_rs_cldclass.h5 data/ross_sea_cldclass.h5 2&gt;/dev/null
@@ -504,7 +536,5 @@ python scripts/plot_cloud_top_thickness_composite.py -o plots/cloud_top_thicknes
 <h3 id="print_regime_season_table.py">print_regime_season_table.py</h3>
 <p>Print regime-season table.</p>
 <pre><code>python scripts/print_regime_season_table.py data/regime_season_hist.h5</code></pre>
-<h3 id="map.r">map.R</h3>
-<pre><code>scripts/map.py -o plots/map.pdf</code></pre>
 </body>
 </html>

@@ -1,19 +1,19 @@
 {
     "classes": [
         [
-            "out/cloud_incidence_rs_cldclass.h5"
+            "data/cloud_incidence_rs_cldclass.h5"
         ],
         [
-            "out/cloud_incidence_rs_wnc_cldclass.h5",
-            "out/cloud_incidence_rs_snc_cldclass.h5",
-            "out/cloud_incidence_rs_ras_cldclass.h5",
-            "out/cloud_incidence_rs_wsc_cldclass.h5",
-            "out/cloud_incidence_rs_ws_cldclass.h5"
+            "data/cloud_incidence_rs_wnc_cldclass.h5",
+            "data/cloud_incidence_rs_snc_cldclass.h5",
+            "data/cloud_incidence_rs_ras_cldclass.h5",
+            "data/cloud_incidence_rs_wsc_cldclass.h5",
+            "data/cloud_incidence_rs_ws_cldclass.h5"
         ], [
-            "out/cloud_incidence_rs_djf_cldclass.h5",
-            "out/cloud_incidence_rs_mam_cldclass.h5",
-            "out/cloud_incidence_rs_jja_cldclass.h5",
-            "out/cloud_incidence_rs_son_cldclass.h5"
+            "data/cloud_incidence_rs_djf_cldclass.h5",
+            "data/cloud_incidence_rs_mam_cldclass.h5",
+            "data/cloud_incidence_rs_jja_cldclass.h5",
+            "data/cloud_incidence_rs_son_cldclass.h5"
         ]
     ],
     "labels": ["reference", "regime", "season"]

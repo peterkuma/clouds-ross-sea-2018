@@ -83,10 +83,11 @@ def plot_main(
 
     plt.grid()
 
-    for x in region_heights:
+    for x in region_heights[1:-1]:
         plt.axhline(x,
             color='black',
-            lw=0.5
+            lw=1,
+            linestyle='dashed'
         )
 
     if show_height_labels:

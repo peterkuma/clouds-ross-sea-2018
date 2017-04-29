@@ -1,0 +1,20 @@
+{
+    "files": [
+        "data/cloud_incidence_rs.h5",
+        "data/cloud_incidence_rs_cldclass.h5",
+        "data/cloud_incidence_ris.h5",
+        "data/cloud_incidence_ris_cldclass.h5"
+    ],
+    "labels": [
+        "RS (2B-GEOPROF-LIDAR)",
+        "RS (2B-CLDCLASS-LIDAR)",
+        "RIS (2B-GEOPROF-LIDAR)",
+        "RIS (2b-CLDCLASS-LIDAR)"
+    ],
+    "colors": [
+        "#257EE3",
+        "#17C7FF",
+        "#DB244D",
+        "#ff8616"
+    ]
+}

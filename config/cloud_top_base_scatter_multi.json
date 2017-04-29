@@ -1,0 +1,14 @@
+{
+    "ylabels": ["RS", "RIS"],
+    "xlabels": ["2B-GEOPROF-LIDAR", "2B-CLDCLASS-LIDAR"],
+    "panels": [
+        [
+            "data/ross_sea.h5",
+            "data/ross_sea_cldclass.h5"
+        ],
+        [
+            "data/ross_ice_shelf.h5",
+            "data/ross_ice_shelf_cldclass.h5"
+        ]
+    ]
+}

@@ -1,3 +1,5 @@
+SHELL := bash
+
 dataset_2b_geoprof_lidar := /data/datasets/cloudsat/2b-geoprof-lidar
 dataset_2b_cldclass_lidar := /cloudsat/2b-cldclass-lidar.p_r04
 dataset_add := /data/datasets/add
@@ -137,7 +139,8 @@ cloud_incidence_by_phase_plots := \
 correction_factor_plots := \
 	plots/correction_factor.pdf \
 	plots/correction_factor_djf.pdf \
-	plots/correction_factor_jja.pdf
+	plots/correction_factor_jja.pdf \
+	plots/correction_factor_multi.pdf
 
 cloud_incidence_summary_by_phase_plots := \
 	plots/cloud_incidence_summary_by_phase_rs_seasons.pdf \
@@ -278,6 +281,7 @@ cloud_top_thickness_composite_plots := \
 plots := \
 	$(cloud_top_hist_plots) \
 	$(cloud_top_base_scatter_plots) \
+	plots/cloud_top_base_scatter_multi.pdf \
 	$(cloud_incidence_plots) \
 	$(cloud_incidence_by_type_plots) \
 	$(cloud_incidence_by_phase_plots) \
@@ -287,15 +291,17 @@ plots := \
 	$(cloud_incidence_summary_by_type_plots) \
 	$(cloud_incidence_information_gain_plots) \
 	$(cloud_incidence_by_phase_regime_plots) \
+	plots/cloud_incidence_multi.pdf \
 	plots/cloud_layers_hist_cldclass.pdf \
 	$(cloud_types_hist_plots) \
 	$(cloud_top_thickness_plots) \
 	plots/cloud_top_thickness_hist.pdf \
 	plots/cloud_types_hist_int.pdf \
+	plots/cloud_types_hist_int_with_cs.pdf \
 	$(cloud_top_thickness_composite_plots) \
 	plots/map.pdf
 
-all: plots eps png img README.html
+all: plots png img README.html
 
 README.html: README.md
 	pandoc -o README.html README.md --css github.css
@@ -304,14 +310,6 @@ README.html: README.md
 
 .PHONY: plots
 plots: $(plots)
-
-# EPS
-
-.PHONY: eps
-eps: $(plots:plots/%.pdf=plots/eps/%.eps)
-
-plots/eps/%.eps: plots/%.pdf
-	gs -q -dNOCACHE -dNOPAUSE -dBATCH -dSAFER -sDEVICE=epswrite -sOutputFile=$@ $^
 
 # PNG
 
@@ -382,19 +380,19 @@ plots/cloud_top_hist_ris_cldclass.pdf: data/ross_ice_shelf_cldclass.h5
 
 plots/cloud_top_hist_rs_%.pdf: data/ross_sea.h5
 	regime=$*; \
-	spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, ${regime^^}, 2006-2011, 2B-GEOPROF-LIDAR)" -o $@ -r $* $^ 2>/dev/null
+	spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, $${regime^^}, 2006-2011, 2B-GEOPROF-LIDAR)" -o $@ -r $* $^ 2>/dev/null
 
 plots/cloud_top_hist_ris_%.pdf: data/ross_ice_shelf.h5
 	regime=$*; \
-	spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, ${regime^^}, 2006-2011, 2B-GEOPROF-LIDAR)" -o $@ -r $* $^ 2>/dev/null
+	spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, $${regime^^}, 2006-2011, 2B-GEOPROF-LIDAR)" -o $@ -r $* $^ 2>/dev/null
 
 plots/cloud_top_hist_rs_%_cldclass.pdf: data/ross_sea_cldclass.h5
 	regime=$*; \
-	spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ -r $* $^ 2>/dev/null
+	spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Sea, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ -r $* $^ 2>/dev/null
 
 plots/cloud_top_hist_ris_%_cldclass.pdf: data/ross_ice_shelf_cldclass.h5
 	regime=$*; \
-	spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ -r $* $^ 2>/dev/null
+	spark-submit scripts/cloud_top_hist.py -t "Cloud top (Ross Ice Shelf, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ -r $* $^ 2>/dev/null
 
 # Profile sample
 
@@ -409,7 +407,7 @@ plots/profile_sample_rs.pdf: data/ross_sea.h5
 plots/profile_sample_ris.pdf: data/ross_ice_shelf.h5
 	spark-submit scripts/profile_sample.py -o $@ $^ 2>/dev/null
 
-# Cloud top-base scatter
+# Cloud top-base scatter plot
 
 .PHONY: cloud_top_base_scatter
 cloud_top_base_scatter: $(cloud_top_base_scatter_plots)
@@ -425,6 +423,15 @@ plots/cloud_top_base_scatter_rs_cldclass.pdf: data/ross_sea_cldclass.h5
 
 plots/cloud_top_base_scatter_ris_cldclass.pdf: data/ross_ice_shelf_cldclass.h5
 	spark-submit scripts/cloud_top_base_scatter.py -t 'Cloud top/base scatter plot (Ross Ice Shelf, 2B-CLDCLASS-LIDAR)' -o $@ $^ 2>/dev/null
+
+# Cloud top-base scatter plot (multi)
+
+plots/cloud_top_base_scatter_multi.pdf: \
+		scripts/cloud_top_base_scatter_multi.py \
+		data/ross_sea_cldclass.h5 \
+		data/ross_ice_shelf.h5 \
+		data/ross_ice_shelf_cldclass.h5
+	spark-submit scripts/cloud_top_base_scatter_multi.py -c config/cloud_top_base_scatter_multi.json -o $@ 2>/dev/null
 
 # Cloud incidence
 
@@ -518,11 +525,11 @@ plots/cloud_incidence_ris_cldclass.pdf: data/cloud_incidence_ris_cldclass.h5
 
 plots/cloud_incidence_rs_%_cldclass.pdf: data/cloud_incidence_rs_cldclass.h5
 	regime=$*; \
-	python scripts/plot_cloud_incidence.py -t "Cloud incidence (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
+	python scripts/plot_cloud_incidence.py -t "Cloud incidence (Ross Sea, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
 
 plots/cloud_incidence_ris_%_cldclass.pdf: data/cloud_incidence_ris_cldclass.h5
 	regime=$*; \
-	python scripts/plot_cloud_incidence.py -t "Cloud incidence (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
+	python scripts/plot_cloud_incidence.py -t "Cloud incidence (Ross Ice Shelf, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
 
 # Plot cloud incidence by type
 
@@ -537,11 +544,11 @@ plots/cloud_incidence_by_type_ris_cldclass.pdf: data/cloud_incidence_ris_cldclas
 
 plots/cloud_incidence_by_type_rs_%_cldclass.pdf: data/cloud_incidence_rs_%_cldclass.h5
 	regime=$*; \
-	python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
+	python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Sea, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
 
 plots/cloud_incidence_by_type_ris_%_cldclass.pdf: data/cloud_incidence_ris_%_cldclass.h5
 	regime=$*; \
-	python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
+	python scripts/plot_cloud_incidence_by_type.py -t "Cloud incidence by type (Ross Ice Shelf, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
 
 # Plot cloud incidence by phase
 
@@ -556,11 +563,11 @@ plots/cloud_incidence_by_phase_ris_cldclass.pdf: data/cloud_incidence_ris_cldcla
 
 plots/cloud_incidence_by_phase_rs_%_cldclass.pdf: data/cloud_incidence_rs_%_cldclass.h5 scripts/plot_cloud_incidence_by_phase.py
 	regime=$*; \
-	python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $<
+	python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Sea, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $<
 
 plots/cloud_incidence_by_phase_ris_%_cldclass.pdf: data/cloud_incidence_ris_%_cldclass.h5 scripts/plot_cloud_incidence_by_phase.py
 	regime=$*; \
-	python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $<
+	python scripts/plot_cloud_incidence_by_phase.py -t "Cloud incidence by phase (Ross Ice Shelf, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $<
 
 # Cloud incidence map 8000 vs. 8300
 
@@ -580,6 +587,13 @@ plots/correction_factor_djf.pdf: data/cloud_incidence_map_8000_8300_djf.h5
 
 plots/correction_factor_jja.pdf: data/cloud_incidence_map_8000_8300_jja.h5
 	python scripts/plot_correction_factor.py $^ -t 'Cloud incidence correction factor 8000 m vs. 8300 m (JJA)' -o $@
+
+plots/correction_factor_multi.pdf: \
+		scripts/plot_correction_factor_multi.py \
+		data/cloud_incidence_map_8000_8300.h5 \
+		data/cloud_incidence_map_8000_8300_djf.h5 \
+		data/cloud_incidence_map_8000_8300_jja.h5
+	python scripts/plot_correction_factor_multi.py -o $@ -c config/correction_factor_multi.json
 
 # Plot regimes
 
@@ -770,6 +784,17 @@ data/cloud_layers_hist_rs_%_cldclass.h5: data/ross_sea_cldclass.h5
 data/cloud_layers_hist_ris_%_cldclass.h5: data/ross_ice_shelf_cldclass.h5
 	spark-submit scripts/cloud_layers_hist.py -o $@ -r $* $^ 2>/dev/null
 
+# Plot cloud incidence (multi)
+
+plots/cloud_incidence_multi.pdf: \
+		scripts/plot_cloud_incidence_multi.py \
+		config/cloud_incidence_multi.json \
+		data/cloud_incidence_rs.h5 \
+		data/cloud_incidence_ris.h5 \
+		data/cloud_incidence_rs_cldclass.h5 \
+		data/cloud_incidence_ris.h5
+	python scripts/plot_cloud_incidence_multi.py -o $@ -c config/cloud_incidence_multi.json
+
 # Plot cloud layers histogram
 
 plots/cloud_layers_hist_cldclass.pdf: \
@@ -805,20 +830,20 @@ data/counts.csv: \
 		echo "RS,all,$(spark-submit scripts/count.py data/ross_sea_cldclass.h5 2>/dev/null)"; \
 		echo "RIS,all,$(spark-submit scripts/count.py data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
 		for regime in wnc snc ras wsc ws; do \
-			echo "RS,${regime^^},$(spark-submit scripts/count.py -r "$regime" data/ross_sea_cldclass.h5 2>/dev/null)"; \
-			echo "RS-E,${regime^^},$(spark-submit scripts/count.py -r "$regime" -a ross_sea_east data/ross_sea_cldclass.h5 2>/dev/null)"; \
-			echo "RS-W,${regime^^},$(spark-submit scripts/count.py -r "$regime" -a ross_sea_west data/ross_sea_cldclass.h5 2>/dev/null)"; \
-			echo "RIS,${regime^^},$(spark-submit scripts/count.py -r "$regime" data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
-			echo "RIS-E,${regime^^},$(spark-submit scripts/count.py -r "$regime" -a ross_ice_shelf_east data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
-			echo "RIS-W,${regime^^},$(spark-submit scripts/count.py -r "$regime" -a ross_ice_shelf_west data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
+			echo "RS,$${regime^^},$(spark-submit scripts/count.py -r "$regime" data/ross_sea_cldclass.h5 2>/dev/null)"; \
+			echo "RS-E,$${regime^^},$(spark-submit scripts/count.py -r "$regime" -a ross_sea_east data/ross_sea_cldclass.h5 2>/dev/null)"; \
+			echo "RS-W,$${regime^^},$(spark-submit scripts/count.py -r "$regime" -a ross_sea_west data/ross_sea_cldclass.h5 2>/dev/null)"; \
+			echo "RIS,$${regime^^},$(spark-submit scripts/count.py -r "$regime" data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
+			echo "RIS-E,$${regime^^},$(spark-submit scripts/count.py -r "$regime" -a ross_ice_shelf_east data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
+			echo "RIS-W,$${regime^^},$(spark-submit scripts/count.py -r "$regime" -a ross_ice_shelf_west data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
 		done; \
 		for season in djf mam jja son; do; \
-			echo "RS,${season^^},$(spark-submit scripts/count.py -s "$season" data/ross_sea_cldclass.h5 2>/dev/null)"; \
-			echo "RS-E,${season^^},$(spark-submit scripts/count.py -s "$season" -a ross_sea_east data/ross_sea_cldclass.h5 2>/dev/null)"; \
-			echo "RS-W,${season^^},$(spark-submit scripts/count.py -s "$season" -a ross_sea_west data/ross_sea_cldclass.h5 2>/dev/null)"; \
-			echo "RIS,${season^^},$(spark-submit scripts/count.py -s "$season" data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
-			echo "RIS-E,${season^^},$(spark-submit scripts/count.py -s "$season" -a ross_ice_shelf_east data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
-			echo "RIS-W,${season^^},$(spark-submit scripts/count.py -s "$season" -a ross_ice_shelf_west data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
+			echo "RS,$${season^^},$(spark-submit scripts/count.py -s "$season" data/ross_sea_cldclass.h5 2>/dev/null)"; \
+			echo "RS-E,$${season^^},$(spark-submit scripts/count.py -s "$season" -a ross_sea_east data/ross_sea_cldclass.h5 2>/dev/null)"; \
+			echo "RS-W,$${season^^},$(spark-submit scripts/count.py -s "$season" -a ross_sea_west data/ross_sea_cldclass.h5 2>/dev/null)"; \
+			echo "RIS,$${season^^},$(spark-submit scripts/count.py -s "$season" data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
+			echo "RIS-E,$${season^^},$(spark-submit scripts/count.py -s "$season" -a ross_ice_shelf_east data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
+			echo "RIS-W,$${season^^},$(spark-submit scripts/count.py -s "$season" -a ross_ice_shelf_west data/ross_ice_shelf_cldclass.h5 2>/dev/null)"; \
 		done; \
 	' > plots/counts.csv
 
@@ -914,35 +939,35 @@ plots/cloud_top_thickness_hist_ris_cldclass.pdf: data/cloud_top_thickness_hist_r
 
 plots/cloud_top_thickness_hist_rs_regime_%_cldclass.pdf: data/cloud_top_thickness_hist_rs_regime_%_cldclass.h5
 	regime=$*; \
-	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
+	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Sea, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
 
 plots/cloud_top_thickness_hist_rs_season_%_cldclass.pdf: data/cloud_top_thickness_hist_rs_season_%_cldclass.h5
 	season=$*; \
-	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Sea, ${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
+	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Sea, $${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
 
 plots/cloud_top_thickness_hist_ris_regime_%_cldclass.pdf: data/cloud_top_thickness_hist_ris_regime_%_cldclass.h5
 	regime=$*; \
-	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
+	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Ice Shelf, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
 
 plots/cloud_top_thickness_hist_ris_season_%_cldclass.pdf: data/cloud_top_thickness_hist_ris_season_%_cldclass.h5
 	season=$*; \
-	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Ice Shelf, ${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
+	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Ice Shelf, $${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $^
 
 plots/cloud_top_thickness_hist_rs_regime_%_rel_cldclass.pdf: data/cloud_top_thickness_hist_rs_regime_%_cldclass.h5 data/cloud_top_thickness_hist_rs_cldclass.h5
 	regime=$*; \
-	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Sea, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $< data/cloud_top_thickness_hist_rs_cldclass.h5
+	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Sea, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $< data/cloud_top_thickness_hist_rs_cldclass.h5
 
 plots/cloud_top_thickness_hist_rs_season_%_rel_cldclass.pdf: data/cloud_top_thickness_hist_rs_season_%_cldclass.h5 data/cloud_top_thickness_hist_rs_cldclass.h5
 	season=$*; \
-	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Sea, ${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $< data/cloud_top_thickness_hist_rs_cldclass.h5
+	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Sea, $${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $< data/cloud_top_thickness_hist_rs_cldclass.h5
 
 plots/cloud_top_thickness_hist_ris_regime_%_rel_cldclass.pdf: data/cloud_top_thickness_hist_ris_regime_%_cldclass.h5 data/cloud_top_thickness_hist_ris_cldclass.h5
 	regime=$*; \
-	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Ice Shelf, ${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $< data/cloud_top_thickness_hist_ris_cldclass.h5
+	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Ice Shelf, $${regime^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $< data/cloud_top_thickness_hist_ris_cldclass.h5
 
 plots/cloud_top_thickness_hist_ris_season_%_rel_cldclass.pdf: data/cloud_top_thickness_hist_ris_season_%_cldclass.h5 data/cloud_top_thickness_hist_ris_cldclass.h5
 	season=$*; \
-	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Ice Shelf, ${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $< data/cloud_top_thickness_hist_ris_cldclass.h5
+	python scripts/plot_cloud_top_thickness_hist.py -t "Cloud top-thickness histogram (Ross Ice Shelf, $${season^^}, 2007-2010, 2B-CLDCLASS-LIDAR)" -o $@ $< data/cloud_top_thickness_hist_ris_cldclass.h5
 
 # Plot cloud top-thickness histogram (multiple panels)
 
@@ -1019,6 +1044,32 @@ plots/cloud_types_hist_int.pdf: \
 		data/cloud_types_hist_int_ris_jja_cldclass.h5 \
 		data/cloud_types_hist_int_ris_son_cldclass.h5
 	python scripts/plot_cloud_types_hist_int.py -o $@ -c config/cloud_types_hist_int.json
+
+plots/cloud_types_hist_int_with_cs.pdf: \
+		scripts/plot_cloud_types_hist_int.py \
+		config/cloud_types_hist_int.json \
+		data/cloud_types_hist_int_rs_cldclass.h5 \
+		data/cloud_types_hist_int_rs_wnc_cldclass.h5 \
+		data/cloud_types_hist_int_rs_snc_cldclass.h5 \
+		data/cloud_types_hist_int_rs_ras_cldclass.h5 \
+		data/cloud_types_hist_int_rs_wsc_cldclass.h5 \
+		data/cloud_types_hist_int_rs_ws_cldclass.h5 \
+		data/cloud_types_hist_int_rs_djf_cldclass.h5 \
+		data/cloud_types_hist_int_rs_mam_cldclass.h5 \
+		data/cloud_types_hist_int_rs_jja_cldclass.h5 \
+		data/cloud_types_hist_int_rs_son_cldclass.h5 \
+		data/cloud_types_hist_int_ris_cldclass.h5 \
+		data/cloud_types_hist_int_ris_wnc_cldclass.h5 \
+		data/cloud_types_hist_int_ris_snc_cldclass.h5 \
+		data/cloud_types_hist_int_ris_ras_cldclass.h5 \
+		data/cloud_types_hist_int_ris_wsc_cldclass.h5 \
+		data/cloud_types_hist_int_ris_ws_cldclass.h5 \
+		data/cloud_types_hist_int_ris_djf_cldclass.h5 \
+		data/cloud_types_hist_int_ris_mam_cldclass.h5 \
+		data/cloud_types_hist_int_ris_jja_cldclass.h5 \
+		data/cloud_types_hist_int_ris_son_cldclass.h5
+	python scripts/plot_cloud_types_hist_int.py -o $@ -c config/cloud_types_hist_int.json --with-cs
+
 
 # Plot cloud top vs. cloud thickness composite plot
 

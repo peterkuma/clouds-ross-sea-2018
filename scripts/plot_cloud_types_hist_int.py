@@ -32,47 +32,8 @@ cloud_types_order = np.array([
     2, # Ns
 ])
 
-# cloud_colors = np.array([
-#     '#FFFFFF', # CS
-#     '#EEEEEE', # N/A
-#     '#450084', # Ci
-#     '#0000FF', # As
-#     '#00A7FF', # Ac
-#     '#00E831', # St+Sc
-#     #'#FEFE00', # Sc
-#     '#FFAA00', # Cu
-#     '#C800C8', # DC
-#     '#F73C0A' # Ns
-# ])
-
-# cloud_colors = np.array([
-#     '#ffffff', # CS
-#     '#e4e4e4', # N/A
-#     '#965fff', # Ci
-#     '#5f81ff', # As
-#     '#5fe4ff', # Ac
-#     '#abff5f', # St+Sc
-#     #'#ebeb26', # Sc
-#     '#ffb05f', # Cu
-#     '#ff5fe2', # DC
-#     '#f74e4e' # Ns
-# ])
-
-# cloud_colors = np.array([
-#     '#ffffff', # CS
-#     '#e4e4e4', # N/A
-#     '#6500c7', # Ci
-#     '#031ed3', # As
-#     '#0195fc', # Ac
-#     '#00560d', # St+Sc
-#     #'#ebeb26', # Sc
-#     '#d64400', # Cu
-#     '#960096', # DC
-#     '#f74e4e' # Ns
-# ])
-
 cloud_colors = np.array([
-    '#FFFFFF', # CS
+    '#ecf5ff', # CS
     '#EEEEEE', # N/A
     '#db244d', # Ci
     '#17c7ff', # As
@@ -85,7 +46,7 @@ cloud_colors = np.array([
 ])
 
 cloud_text_color = np.array([
-    '#FFFFFF', # CS
+    '#000000', # CS
     '#FFFFFF', # N/A
     '#FFFFFF', # Ci
     '#000000', # As
@@ -98,13 +59,17 @@ cloud_text_color = np.array([
 ])
 
 
-def plot_main(files, labels, sep=None, show_yax=True):
+def plot_main(files, labels, sep=None, show_yax=True, with_cs=False):
     n = len(files)
     idx = np.arange(n)
     for f, i in zip(files, idx):
         hist = f['cloud_types_hist_int'][::]
         hist = combine_st_sc(hist)
-        hist = hist[cloud_types_order][1:]
+        if with_cs:
+            mask = range(len(hist))
+        else:
+            mask = range(1, len(hist))
+        hist = hist[cloud_types_order][mask]
         m = hist.size
         hist = hist/np.sum(hist)*100.0
         bottom = np.hstack([[0], np.cumsum(hist)[:-1]])
@@ -113,7 +78,7 @@ def plot_main(files, labels, sep=None, show_yax=True):
             height=hist,
             width=1,
             bottom=bottom,
-            color=cloud_colors[cloud_types_order][1:],
+            color=cloud_colors[cloud_types_order][mask],
             lw=0.4
         )
         for j in range(m):
@@ -129,7 +94,7 @@ def plot_main(files, labels, sep=None, show_yax=True):
                     ha='center',
                     va='center',
                     fontsize=f(hist[j]),
-                    color=cloud_text_color[cloud_types_order][1:][j]
+                    color=cloud_text_color[cloud_types_order][mask][j]
                 )
 
     if sep:
@@ -176,6 +141,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Plot cloud types histogram (integrated)')
     parser.add_argument('-c', dest='config', type=str, help='config file')
     parser.add_argument('-o', dest='outfile', type=str, help='output plot', default='')
+    parser.add_argument('--with-cs', dest='with_cs', help='with clear sky', action='store_true')
 
     args = parser.parse_args()
 
@@ -204,7 +170,8 @@ if __name__ == '__main__':
             files,
             panel['labels'],
             show_yax=(i == 0),
-            sep=panel.get('sep')
+            sep=panel.get('sep'),
+            with_cs=args.with_cs
         )
 
         plt.annotate(panel['title'],
@@ -229,6 +196,10 @@ if __name__ == '__main__':
         )
 
     cax = plt.subplot(gs[n])
-    plot_colorbar(cax, skip=np.array([0, 1, 2]))
+
+    if args.with_cs:
+        plot_colorbar(cax, skip=np.array([1, 2]))
+    else:
+        plot_colorbar(cax, skip=np.array([0, 1, 2]))
 
     plt.savefig(args.outfile, bbox_inches='tight')

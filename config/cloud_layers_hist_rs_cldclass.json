@@ -1,15 +1,15 @@
 {
     "labels": ["all", "WNC", "SNC", "RAS", "WSC", "WS", "DJF", "MAM", "JJA", "SON"],
     "files": [
-        "out/cloud_layers_hist_rs_cldclass.h5",
-        "out/cloud_layers_hist_rs_wnc_cldclass.h5",
-        "out/cloud_layers_hist_rs_snc_cldclass.h5",
-        "out/cloud_layers_hist_rs_ras_cldclass.h5",
-        "out/cloud_layers_hist_rs_wsc_cldclass.h5",
-        "out/cloud_layers_hist_rs_ws_cldclass.h5",
-        "out/cloud_layers_hist_rs_djf_cldclass.h5",
-        "out/cloud_layers_hist_rs_mam_cldclass.h5",
-        "out/cloud_layers_hist_rs_jja_cldclass.h5",
-        "out/cloud_layers_hist_rs_son_cldclass.h5"
+        "data/cloud_layers_hist_rs_cldclass.h5",
+        "data/cloud_layers_hist_rs_wnc_cldclass.h5",
+        "data/cloud_layers_hist_rs_snc_cldclass.h5",
+        "data/cloud_layers_hist_rs_ras_cldclass.h5",
+        "data/cloud_layers_hist_rs_wsc_cldclass.h5",
+        "data/cloud_layers_hist_rs_ws_cldclass.h5",
+        "data/cloud_layers_hist_rs_djf_cldclass.h5",
+        "data/cloud_layers_hist_rs_mam_cldclass.h5",
+        "data/cloud_layers_hist_rs_jja_cldclass.h5",
+        "data/cloud_layers_hist_rs_son_cldclass.h5"
     ]
 }
