@@ -5,7 +5,8 @@ Peter Kuma <<peter.kuma@pg.canterbury.ac.nz>>²,
 Adrian McDonald <<adrian.mcdonald@canterbury.ac.nz>>²,
 Simon Parsons <<simon.parsons@canterbury.ac.nz>>²
 
-¹Landcare Research, Lincoln, New Zealand, ²University of Canterbury, Christchurch, New Zealand
+¹Landcare Research, Lincoln, New Zealand,
+²University of Canterbury, Christchurch, New Zealand
 
 This repository contains scientific datasets and scripts for processing CloudSat
 datasets and producing results presented in the paper
@@ -79,7 +80,7 @@ In order to run the scripts the following products should be available
 on your file system:
 
 - [CloudSat 2B-CLDCLASS-LIDAR P_R04 products (2007-2010)](http://www.cloudsat.cira.colostate.edu/data-products/level-2b/2b-cldclass-lidar?term=26)
-- **Optional:** [CloudSat 2B-GEOPROF-LIDAR P2_R04 products (2006-2011)](http://www.cloudsat.cira.colostate.edu/data-products/level-2b/2b-geoprof-lidar?term=48)
+- [CloudSat 2B-GEOPROF-LIDAR P2_R04 products (2006-2011)](http://www.cloudsat.cira.colostate.edu/data-products/level-2b/2b-geoprof-lidar?term=48)
 
 You can download the complete datasets from the
 CloudSat DPC FTP server
@@ -93,8 +94,8 @@ structure "as is".
 
 The following sections list scripts names used to produce figures and tables
 in the paper. Please see the reference section below for a full description
-of the scripts. **Scripts** is a list of scripts which need to be run in order to
-produce the figure or table.
+of the scripts. **Scripts** is a list of scripts which need to be run in order
+to produce the figure or table.
 
 This repository also contains scripts which may
 be useful for additional analysis, but were not used directly to produce
