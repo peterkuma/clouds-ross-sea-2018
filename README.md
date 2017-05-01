@@ -78,7 +78,7 @@ The following software is needed for conversion between graphical formats
 In order to run the scripts the following products should be available
 on your file system:
 
-- [CloudSat 2B-CLDCLASS-LIDAR P_R04 products (2007-2010)](http://www.cloudsat.cira.colostate.edu/data-products/level-2b/2b-cldclass?term=25)
+- [CloudSat 2B-CLDCLASS-LIDAR P_R04 products (2007-2010)](http://www.cloudsat.cira.colostate.edu/data-products/level-2b/2b-cldclass-lidar?term=26)
 - **Optional:** [CloudSat 2B-GEOPROF-LIDAR P2_R04 products (2006-2011)](http://www.cloudsat.cira.colostate.edu/data-products/level-2b/2b-geoprof-lidar?term=48)
 
 You can download the complete datasets from the
