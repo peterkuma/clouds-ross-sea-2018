@@ -1,17 +1,15 @@
-# Code and data for the paper "An analysis of the cloud environment over the Ross Sea and Ross Ice Shelf using CloudSat/CALIPSO satellites: The importance of Synoptic Forcing"
+# Code and data for the paper “An analysis of the cloud environment over the Ross Sea and Ross Ice Shelf using CloudSat/CALIPSO satellites: The importance of Synoptic”
 
-Ben Jolly <<jollyb@landcareresearch.co.nz>>¹,
-Peter Kuma <<peter.kuma@pg.canterbury.ac.nz>>²,
-Adrian McDonald <<adrian.mcdonald@canterbury.ac.nz>>²,
-Simon Parsons <<simon.parsons@canterbury.ac.nz>>²
+**Authors:** Ben Jolly¹, Peter Kuma², Adrian McDonald², and Simon Parsons²
 
 ¹Landcare Research, Lincoln, New Zealand,
 ²University of Canterbury, Christchurch, New Zealand
 
-This repository contains scientific datasets and scripts for processing CloudSat
-datasets and producing results presented in the paper
-*An analysis of the cloud environment over the Ross Sea and Ross Ice Shelf
-using CloudSat/CALIPSO satellites: The importance of Synoptic Forcing*.
+This repository contains scientific datasets and scripts for processing
+CloudSat datasets and producing results presented in the paper [An analysis of
+the cloud environment over the Ross Sea and Ross Ice Shelf using
+CloudSat/CALIPSO satellites: The importance of
+Synoptic](https://doi.org/10.5194/acp-18-9723-2018).
 
 ## Setup
 
