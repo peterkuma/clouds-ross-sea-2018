@@ -714,3 +714,8 @@ Regime-season histogram.
 Print regime-season table.
 
     python scripts/print_regime_season_table.py data/regime_season_hist.h5
+
+License
+-------
+
+This software is available under the terms of the [MIT license](LICENSE.md).
