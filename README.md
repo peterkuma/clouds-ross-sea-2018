@@ -2,7 +2,7 @@
 
 **Authors:** Ben Jolly¹, Peter Kuma², Adrian McDonald², and Simon Parsons²
 
-¹Landcare Research, Lincoln, New Zealand,
+¹Landcare Research, Lincoln, New Zealand\
 ²University of Canterbury, Christchurch, New Zealand
 
 This repository contains scientific datasets and scripts for processing
